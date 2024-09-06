@@ -1,16 +1,33 @@
+using Dating.API.Services;
+using Dating.DAL.Context;
+using Dating.DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+// API stuff
+builder.Services.AddScoped<IUsersService, UsersService>();
+
+// DAL stuff
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
+builder.Services.AddDbContext<DataContext>(opt =>
+{
+    opt.UseSqlite(
+        builder.Configuration.GetConnectionString("SQLite"),
+        options => options.MigrationsAssembly("Dating.DAL"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
-
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
