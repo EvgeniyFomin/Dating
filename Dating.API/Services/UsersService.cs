@@ -1,6 +1,8 @@
-﻿using Dating.Core.Models;
+﻿using Dating.Core.Dtos;
+using Dating.Core.Models;
 using Dating.DAL.Repositories;
-using Microsoft.AspNetCore.Http.HttpResults;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Dating.API.Services
 {
@@ -8,8 +10,22 @@ namespace Dating.API.Services
     {
         private readonly IUsersRepository _userRepository = userRepository;
 
+        public User CreateUser(RegisterUserDto userDto)
+        {
+            using var hmac = new HMACSHA512();
+
+            return new User
+            {
+                UserName = userDto.UserName,
+                Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password)),
+                PasswordSalt = hmac.Key
+            };
+        }
+
         public async Task<User> AddAsync(User user)
         {
+           
+
             return await _userRepository.CreateAsync(user);
         }
 
@@ -29,6 +45,11 @@ namespace Dating.API.Services
         public async Task<User> GetByIdAsync(int id)
         {
             return await _userRepository.GetByIdAsync(id);
+        }
+
+        public async Task<bool> CheckIfExists(string userName)
+        {
+            return await _userRepository.IfExists(userName);
         }
     }
 }

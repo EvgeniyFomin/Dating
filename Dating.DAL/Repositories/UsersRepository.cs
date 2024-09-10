@@ -46,5 +46,10 @@ namespace Dating.DAL.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> IfExists(string userName)
+        {
+            return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
+        }
     }
 }

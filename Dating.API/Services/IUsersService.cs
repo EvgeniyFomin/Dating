@@ -12,5 +12,9 @@ namespace Dating.API.Services
         Task<User> AddAsync(User user);
 
         Task<bool> DeleteByIdAsync(int id);
+
+        User CreateUser(RegisterUserDto userDto);
+
+        Task<bool> CheckIfExists(string userName);
     }
 }

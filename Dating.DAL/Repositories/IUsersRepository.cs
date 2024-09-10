@@ -9,5 +9,6 @@ namespace Dating.DAL.Repositories
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> UpdateAsync(User user);
         Task<bool> DeleteByIdAsync(int id);
+        Task<bool> IfExists(string userName);
     }
 }
