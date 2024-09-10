@@ -26,5 +26,20 @@ namespace Dating.API.Controllers
                 ? BadRequest("User was not registered")
                 : Ok($"User {userDto.UserName} was successfully created");
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(RegisterUserDto userDto)
+        {
+            var user = await _usersService.GetByName(userDto.UserName);
+
+            if (user == null)
+            {
+                return NotFound($"User {userDto.UserName} not foud in the system");
+            }
+
+            var res = _usersService.CheckIfPasswordValid(user, userDto.Password);
+
+            return res ? Ok() : Unauthorized("Invalid user or password");
+        }
     }
 }

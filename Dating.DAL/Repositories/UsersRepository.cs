@@ -51,5 +51,10 @@ namespace Dating.DAL.Repositories
         {
             return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
         }
+
+        public async Task<User> GetByName(string name)
+        {
+            return await _dataContext.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+        }
     }
 }

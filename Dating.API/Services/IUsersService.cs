@@ -16,5 +16,9 @@ namespace Dating.API.Services
         User CreateUser(RegisterUserDto userDto);
 
         Task<bool> CheckIfExists(string userName);
+
+        Task<User> GetByName(string userName);
+
+        bool CheckIfPasswordValid(User user, string password);
     }
 }

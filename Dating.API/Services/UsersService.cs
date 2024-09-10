@@ -1,6 +1,7 @@
 ﻿using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.DAL.Repositories;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -24,22 +25,17 @@ namespace Dating.API.Services
 
         public async Task<User> AddAsync(User user)
         {
-           
-
             return await _userRepository.CreateAsync(user);
         }
 
         public async Task<bool> DeleteByIdAsync(int id)
         {
-            var result = await _userRepository.DeleteByIdAsync(id);
-
-            return result;
+            return await _userRepository.DeleteByIdAsync(id);
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _userRepository.GetAllAsync();
-
         }
 
         public async Task<User> GetByIdAsync(int id)
@@ -50,6 +46,28 @@ namespace Dating.API.Services
         public async Task<bool> CheckIfExists(string userName)
         {
             return await _userRepository.IfExists(userName);
+        }
+
+        public async Task<User> GetByName(string userName)
+        {
+            return await _userRepository.GetByName(userName);
+        }
+
+        public bool CheckIfPasswordValid(User user, string password)
+        {
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.Password[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
