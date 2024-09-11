@@ -1,4 +1,5 @@
 using Dating.API.Services;
+using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,10 @@ builder.Services.AddControllers();
 
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-
 builder.Services.AddDbContext<DataContext>(opt =>
 {
     opt.UseSqlite(
@@ -37,6 +38,7 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
     });
 }
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

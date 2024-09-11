@@ -1,7 +1,7 @@
 ﻿using Dating.Core.Dtos;
 using Dating.Core.Models;
 
-namespace Dating.API.Services
+namespace Dating.API.Services.Interfaces
 {
     public interface IUsersService
     {

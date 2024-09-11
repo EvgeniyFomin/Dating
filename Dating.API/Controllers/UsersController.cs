@@ -1,5 +1,4 @@
-﻿using Dating.API.Services;
-using Dating.Core.Models;
+﻿using Dating.API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dating.API.Controllers
@@ -25,14 +24,6 @@ namespace Dating.API.Controllers
             var result = await _usersService.GetByIdAsync(id);
 
             return result == null ? NotFound($"No user found with ID: {id}") : Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] User user)
-        {
-            var result = await _usersService.AddAsync(user);
-
-            return Ok(result);
         }
 
         [HttpDelete("{id}")]

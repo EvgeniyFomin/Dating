@@ -1,4 +1,4 @@
-﻿using Dating.API.Services;
+﻿using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +6,15 @@ namespace Dating.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AccountsController(IUsersService userService) : ControllerBase
+    public class AccountsController(
+        IUsersService userService,
+        ITokenService tokenService) : ControllerBase
     {
         private readonly IUsersService _usersService = userService;
+        private readonly ITokenService _tokenService = tokenService;
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto userDto)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto userDto)
         {
             if (await _usersService.CheckIfExists(userDto.UserName))
             {
@@ -24,7 +27,11 @@ namespace Dating.API.Controllers
 
             return result == null
                 ? BadRequest("User was not registered")
-                : Ok($"User {userDto.UserName} was successfully created");
+                : Ok(new UserDto
+                {
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                });
         }
 
         [HttpPost("login")]
