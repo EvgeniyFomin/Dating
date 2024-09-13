@@ -46,7 +46,14 @@ namespace Dating.API.Controllers
 
             var res = _usersService.CheckIfPasswordValid(user, userDto.Password);
 
-            return res ? Ok() : Unauthorized("Invalid user or password");
+            return res
+                ? Ok(
+                    new UserDto
+                    {
+                        UserName = user.UserName,
+                        Token = _tokenService.CreateToken(user)
+                    })
+                : Unauthorized("Invalid user or password");
         }
     }
 }

@@ -1,3 +1,4 @@
+using Dating.API.Extensions;
 using Dating.API.Services;
 using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddIdentityServices(builder.Configuration);
 
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
@@ -39,8 +42,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
