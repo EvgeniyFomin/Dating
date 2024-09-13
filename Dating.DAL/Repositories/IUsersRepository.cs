@@ -6,8 +6,10 @@ namespace Dating.DAL.Repositories
     {
         Task<User> CreateAsync(User user);
         Task<User> GetByIdAsync(int id);
+        Task<User> GetByName(string name);
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> UpdateAsync(User user);
         Task<bool> DeleteByIdAsync(int id);
+        Task<bool> IfExists(string userName);
     }
 }
