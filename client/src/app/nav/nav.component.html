@@ -18,7 +18,7 @@
 
         @if(loggedIn){
         <div dropdown class="dropdown">
-            <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">Welcome user</a>
+            <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">Welcome user, {{model.username}}</a>
             <div *bsDropdownMenu class="dropdown-menu">
                 <a class="dropdown-item">Edit profile</a>
                 <div class="dropdown-divider"></div>
