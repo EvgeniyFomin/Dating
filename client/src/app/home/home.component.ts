@@ -28,4 +28,7 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('users got successfully')
     })
   }
+  cancelRegisterMode(event: boolean) {
+    this.isRegisterMode = event;
+  }
 }
