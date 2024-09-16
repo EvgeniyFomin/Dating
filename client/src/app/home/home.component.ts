@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
+
 export class HomeComponent implements OnInit {
   httpClient = inject(HttpClient);
   isRegisterMode = false;
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
   registerToggle() {
     this.isRegisterMode = !this.isRegisterMode;
   }
+
   getUsers() {
     this.httpClient.get('https://localhost:5001/users').subscribe({
       next: users => this.users = users,
@@ -28,6 +30,7 @@ export class HomeComponent implements OnInit {
       complete: () => console.log('users got successfully')
     })
   }
+
   cancelRegisterMode(event: boolean) {
     this.isRegisterMode = event;
   }

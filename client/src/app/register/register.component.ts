@@ -8,10 +8,10 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
+
 export class RegisterComponent {
   usersFromHomeComponent = input.required<any>();
   cancelRegistration = output<boolean>();
-
   model: any = {}
 
   register() {
