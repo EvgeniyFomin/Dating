@@ -33,7 +33,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseCors(x => x.AllowAnyOrigin()
         .AllowAnyMethod()
-        .WithOrigins("http://localhost:4200", "https://localhost:4200"));
+        .AllowAnyHeader());
+
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
