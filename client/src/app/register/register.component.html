@@ -13,14 +13,4 @@
         <button class="btn btn-success me-2" type="submit">Register</button>
         <button class="btn btn-light me-2" type="button" (click)="cancel()">Cancel</button>
     </div>
-    <div class="mb-3">
-        <label> Select your favourite </label>
-        <select class="form-select">
-            @for (user of usersFromHomeComponent(); track $index) {
-            <option [value]="user.userName">
-                {{user.userName}}
-            </option>
-            }
-        </select>
-    </div>
 </form>
