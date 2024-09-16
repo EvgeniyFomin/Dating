@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  isRegistered = false;
+  isRegisterMode = false;
 
   registerToggle() {
-    this.isRegistered = !this.isRegistered;
+    this.isRegisterMode = !this.isRegisterMode;
   }
 }
