@@ -4,10 +4,12 @@ namespace Dating.Core.Dtos
 {
     public class RegisterUserDto
     {
+        [Required]
         [MaxLength(100)]
-        public required string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
-        [MaxLength(25)]
-        public required string Password { get; set; }
+        [Required]
+        [StringLength(8, MinimumLength = 4)]
+        public required string Password { get; set; } = string.Empty;
     }
 }
