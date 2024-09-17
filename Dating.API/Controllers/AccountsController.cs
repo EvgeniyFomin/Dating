@@ -29,7 +29,7 @@ namespace Dating.API.Controllers
                 ? BadRequest("User was not registered")
                 : Ok(new UserDto
                 {
-                    UserName = user.UserName,
+                    Username = user.UserName,
                     Token = _tokenService.CreateToken(user)
                 });
         }
@@ -50,7 +50,7 @@ namespace Dating.API.Controllers
                 ? Ok(
                     new UserDto
                     {
-                        UserName = user.UserName,
+                        Username = user.UserName,
                         Token = _tokenService.CreateToken(user)
                     })
                 : Unauthorized("Invalid user or password");

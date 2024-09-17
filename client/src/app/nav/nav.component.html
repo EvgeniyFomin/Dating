@@ -15,7 +15,9 @@
             </li>
         </ul>
         <div dropdown class="dropdown">
-            <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">Welcome user</a>
+            <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">
+                Welcome user, {{accountService.currentUser()?.username}}
+            </a>
             <div *bsDropdownMenu class="dropdown-menu">
                 <a class="dropdown-item">Edit profile</a>
                 <div class="dropdown-divider"></div>
