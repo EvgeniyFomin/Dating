@@ -1,4 +1,5 @@
 using Dating.API.Extensions;
+using Dating.API.Middleware;
 using Dating.API.Services;
 using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
@@ -29,6 +30,8 @@ builder.Services.AddDbContext<DataContext>(opt =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseCors(x => x.AllowAnyOrigin()
