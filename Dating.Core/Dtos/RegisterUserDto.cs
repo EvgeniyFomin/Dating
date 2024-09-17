@@ -10,6 +10,6 @@ namespace Dating.Core.Dtos
 
         [Required]
         [StringLength(8, MinimumLength = 4)]
-        public required string Password { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }
