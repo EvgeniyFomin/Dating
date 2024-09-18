@@ -1,3 +1,4 @@
+import { HttpInterceptorFn } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
@@ -22,12 +23,13 @@ export class NavComponent {
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: _ => {
-        this.router.navigateByUrl('/members')
-        console.log("model is ", this.model);
-        console.log("current user is ", this.accountService.currentUser());
-      },
-      error: error => this.toastr.error(error.error)
+      next: _ => this.router.navigateByUrl('/members'),
+      error: error => {
+        const errors: string[] = error;
+        errors.forEach(item => {
+          this.toastr.error(item);
+        });
+      }
     })
   };
 
