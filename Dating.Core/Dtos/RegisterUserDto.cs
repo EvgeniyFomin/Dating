@@ -9,7 +9,7 @@ namespace Dating.Core.Dtos
         public string UserName { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(8, MinimumLength = 4)]
+        [StringLength(8, MinimumLength = 3)]
         public string Password { get; set; } = string.Empty;
     }
 }
