@@ -11,6 +11,7 @@ import { Component, inject } from '@angular/core';
 export class TestErrorsComponent {
   baseUrl = 'https://localhost:5001/';
   private httpClient = inject(HttpClient);
+  validationErrors: string[] = [];
 
   get500error() {
     this.httpClient.get(this.baseUrl + 'buggy/server-error').subscribe({
@@ -23,7 +24,11 @@ export class TestErrorsComponent {
 
     this.httpClient.post(this.baseUrl + 'accounts/register', {}).subscribe({
       next: response => console.log(response),
-      error: error => console.log(error)
+      error: error => {
+        console.log(error);
+        this.validationErrors = error;
+        console.log(this.validationErrors);
+      }
     });
   }
 
