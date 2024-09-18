@@ -23,7 +23,12 @@ export class RegisterComponent {
         console.log(response);
         this.cancel();
       },
-      error: error => this.toastr.error(error.error)
+      error: error => {
+        const errors: string[] = error;
+        errors.forEach(item => {
+          this.toastr.error(item);
+        });
+      }
     });
   }
 
