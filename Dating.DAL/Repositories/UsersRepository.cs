@@ -8,6 +8,32 @@ namespace Dating.DAL.Repositories
     {
         private readonly DataContext _dataContext = dataContext;
 
+        public void UpdateAsync(User user)
+        {
+            _dataContext.Entry(user).State = EntityState.Modified;
+        }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _dataContext.Users.ToListAsync();
+        }
+
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _dataContext.Users.FindAsync(id);
+        }
+
+        public async Task<User?> GetByNameAsync(string name)
+        {
+            return await _dataContext.Users.SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _dataContext.SaveChangesAsync() > 0;
+        }
+
+        // ---- mine
         public async Task<User> CreateAsync(User user)
         {
             var result = await _dataContext.Users.AddAsync(user);
@@ -32,29 +58,9 @@ namespace Dating.DAL.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await _dataContext.Users.ToListAsync();
-        }
-
-        public async Task<User> GetByIdAsync(int id)
-        {
-            return await _dataContext.Users.FindAsync(id);
-        }
-
-        public Task<User> UpdateAsync(User user)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> IfExists(string userName)
         {
             return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
-        }
-
-        public async Task<User> GetByName(string name)
-        {
-            return await _dataContext.Users.FirstOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
         }
     }
 }

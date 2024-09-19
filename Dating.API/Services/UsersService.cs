@@ -54,7 +54,7 @@ namespace Dating.API.Services
 
         public async Task<User> GetByName(string userName)
         {
-            return await _userRepository.GetByName(userName);
+            return await _userRepository.GetByNameAsync(userName);
         }
 
         public bool CheckIfPasswordValid(User user, string password)
