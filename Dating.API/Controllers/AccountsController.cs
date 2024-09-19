@@ -7,10 +7,10 @@ namespace Dating.API.Controllers
     [ApiController]
     [Route("[controller]")]
     public class AccountsController(
-        IUsersService userService,
+        IUsersService usersService,
         ITokenService tokenService) : ControllerBase
     {
-        private readonly IUsersService _usersService = userService;
+        private readonly IUsersService _usersService = usersService;
         private readonly ITokenService _tokenService = tokenService;
 
         [HttpPost("register")]
