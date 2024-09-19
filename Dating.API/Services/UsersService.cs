@@ -2,7 +2,6 @@
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.DAL.Repositories;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,7 +19,11 @@ namespace Dating.API.Services
             {
                 UserName = userDto.UserName,
                 Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password)),
-                PasswordSalt = hmac.Key
+                PasswordSalt = hmac.Key,
+                // ===== to disable error
+                KnownAs = "",
+                City = "",
+                Country = ""
             };
         }
 
