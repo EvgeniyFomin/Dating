@@ -4,6 +4,7 @@ using Dating.API.Services;
 using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
+using Dating.DAL.Seed;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
@@ -52,5 +54,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "Error during the migration");
+}
 
 app.Run();

@@ -2,7 +2,6 @@
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.DAL.Repositories;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,7 +19,11 @@ namespace Dating.API.Services
             {
                 UserName = userDto.UserName,
                 Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password)),
-                PasswordSalt = hmac.Key
+                PasswordSalt = hmac.Key,
+                // ===== to disable error
+                KnownAs = "",
+                City = "",
+                Country = ""
             };
         }
 
@@ -34,24 +37,28 @@ namespace Dating.API.Services
             return await _userRepository.DeleteByIdAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
         {
-            return await _userRepository.GetAllAsync();
+            return await _userRepository.GetAllMemberDtosAsync();
         }
 
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
         {
-            return await _userRepository.GetByIdAsync(id);
+            return await _userRepository.GetMemberDtoById(id);
         }
 
-        public async Task<bool> CheckIfExists(string userName)
+        public async Task<User?> GetByNameAsync(string userName)
+        {
+            return await _userRepository.GetByNameAsync(userName);
+        }
+        public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
+        {
+            return await _userRepository.GetMemberDtoByName(userName);
+        }
+
+        public async Task<bool> CheckIfExistsAsync(string userName)
         {
             return await _userRepository.IfExists(userName);
-        }
-
-        public async Task<User> GetByName(string userName)
-        {
-            return await _userRepository.GetByName(userName);
         }
 
         public bool CheckIfPasswordValid(User user, string password)
