@@ -14,14 +14,14 @@ namespace Dating.API.Controllers
         private readonly ITokenService _tokenService = tokenService;
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto userDto)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto registerDto)
         {
-            if (await _usersService.CheckIfExists(userDto.UserName))
+            if (await _usersService.CheckIfExistsAsync(registerDto.UserName))
             {
-                return BadRequest($"User {userDto.UserName} already exists");
+                return BadRequest($"User {registerDto.UserName} already exists");
             }
 
-            var user = _usersService.CreateUser(userDto);
+            var user = _usersService.CreateUser(registerDto);
 
             var result = await _usersService.AddAsync(user);
 
@@ -35,18 +35,18 @@ namespace Dating.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(RegisterUserDto userDto)
+        public async Task<IActionResult> Login(RegisterUserDto registerDto)
         {
-            var user = await _usersService.GetByName(userDto.UserName);
+            var user = await _usersService.GetByNameAsync(registerDto.UserName);
 
             if (user == null)
             {
-                return NotFound($"User {userDto.UserName} not foud in the system");
+                return NotFound($"User {registerDto.UserName} not foud in the system");
             }
 
-            var res = _usersService.CheckIfPasswordValid(user, userDto.Password);
+            var result = _usersService.CheckIfPasswordValid(user, registerDto.Password);
 
-            return res
+            return result
                 ? Ok(
                     new UserDto
                     {

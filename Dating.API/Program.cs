@@ -18,6 +18,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();

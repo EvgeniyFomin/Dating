@@ -15,17 +15,23 @@ namespace Dating.DAL.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dataContext.Users.ToListAsync();
+            return await _dataContext.Users
+                .Include(x => x.Photos)
+                .ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _dataContext.Users.FindAsync(id);
+            return await _dataContext.Users
+                .Include(x => x.Photos)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User?> GetByNameAsync(string name)
         {
-            return await _dataContext.Users.SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+            return await _dataContext.Users
+                .Include(x => x.Photos)
+                .SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
         }
 
         public async Task<bool> SaveAllAsync()
