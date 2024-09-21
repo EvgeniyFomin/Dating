@@ -14,7 +14,7 @@ namespace Dating.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var resultsDto = await _usersService.GetAllDtosAsync();
+            var resultsDto = await _usersService.GetAllMemberDtosAsync();
 
             return resultsDto.Any()
                 ? Ok(resultsDto)
@@ -25,7 +25,7 @@ namespace Dating.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var resultDto = await _usersService.GetDtoByIdAsync(id);
+            var resultDto = await _usersService.GetMemberDtoByIdAsync(id);
 
             return resultDto == null
                 ? NotFound($"No user found with ID: {id}")
@@ -36,7 +36,7 @@ namespace Dating.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetByUsername([FromRoute] string userName)
         {
-            var resultDto = await _usersService.GetDtoByNameAsync(userName);
+            var resultDto = await _usersService.GetMemberDtoByNameAsync(userName);
 
             return resultDto == null
                 ? NotFound($"No user found with name: {userName}")

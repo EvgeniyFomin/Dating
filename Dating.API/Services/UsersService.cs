@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Dating.API.Services.Interfaces;
+﻿using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.DAL.Repositories;
@@ -8,10 +7,9 @@ using System.Text;
 
 namespace Dating.API.Services
 {
-    public class UsersService(IUsersRepository userRepository, IMapper mapper) : IUsersService
+    public class UsersService(IUsersRepository userRepository) : IUsersService
     {
         private readonly IUsersRepository _userRepository = userRepository;
-        private readonly IMapper _mapper = mapper;
 
         public User CreateUser(RegisterUserDto userDto)
         {
@@ -39,29 +37,28 @@ namespace Dating.API.Services
             return await _userRepository.DeleteByIdAsync(id);
         }
 
-        public async Task<IEnumerable<MemberDto>> GetAllDtosAsync()
+        public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
         {
-            var result = await _userRepository.GetAllAsync();
-
-            return _mapper.Map<IEnumerable<MemberDto>>(result);
+            return await _userRepository.GetAllMemberDtosAsync();
         }
 
-        public async Task<MemberDto> GetDtoByIdAsync(int id)
+        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
         {
-            var result = await _userRepository.GetByIdAsync(id);
-
-            return _mapper.Map<MemberDto>(result);
+            return await _userRepository.GetMemberDtoById(id);
         }
 
         public async Task<User?> GetByNameAsync(string userName)
         {
             return await _userRepository.GetByNameAsync(userName);
         }
-        public async Task<MemberDto> GetDtoByNameAsync(string userName)
+        public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
         {
-            var result = await _userRepository.GetByNameAsync(userName);
+            return await _userRepository.GetMemberDtoByName(userName);
+        }
 
-            return _mapper.Map<MemberDto>(result);
+        public async Task<bool> CheckIfExistsAsync(string userName)
+        {
+            return await _userRepository.IfExists(userName);
         }
 
         public bool CheckIfPasswordValid(User user, string password)
@@ -79,11 +76,6 @@ namespace Dating.API.Services
             }
 
             return true;
-        }
-
-        public async Task<bool> CheckIfExistsAsync(string userName)
-        {
-            return await _userRepository.IfExists(userName);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Dating.Core.Dtos;
+using Dating.Core.Extensions;
 using Dating.Core.Models;
 
 namespace Dating.API.MappingProfiles
@@ -9,7 +10,12 @@ namespace Dating.API.MappingProfiles
         public UsersProfile()
         {
             CreateMap<User, MemberDto>()
-                .ForMember(x => x.MainPhotoUrl, opt => opt.MapFrom(dest => dest.Photos.SingleOrDefault(x => x.IsMain).Url));
+                .ForMember(dest => dest.Age, opt =>
+                    opt.MapFrom(src => src.DateOfBirth.GetAge()))
+
+                .ForMember(dest => dest.MainPhotoUrl, opt =>
+                    opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url));
+
             CreateMap<Photo, PhotoDto>();
         }
     }

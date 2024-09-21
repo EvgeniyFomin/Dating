@@ -1,5 +1,4 @@
 ﻿using Dating.Core.Enums;
-using Dating.Core.Extensions;
 
 namespace Dating.Core.Models
 {
@@ -21,10 +20,5 @@ namespace Dating.Core.Models
         public required string City { get; set; }
         public required string Country { get; set; }
         public List<Photo> Photos { get; set; } = [];
-
-        public int GetAge()
-        {
-            return DateOfBirth.GetAge();
-        }
     }
 }
