@@ -11,22 +11,36 @@ namespace Dating.API.Controllers
     {
         private readonly IUsersService _usersService = usersService;
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _usersService.GetAllAsync();
+            var resultsDto = await _usersService.GetAllMemberDtosAsync();
 
-            return Ok(result);
+            return resultsDto.Any()
+                ? Ok(resultsDto)
+                : NotFound("No users are regiristered in the system yet");
         }
 
-        [Route("{id}")]
+        [Route("{id:int}")]
         [HttpGet]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var result = await _usersService.GetByIdAsync(id);
+            var resultDto = await _usersService.GetMemberDtoByIdAsync(id);
 
-            return result == null ? NotFound($"No user found with ID: {id}") : Ok(result);
+            return resultDto == null
+                ? NotFound($"No user found with ID: {id}")
+                : Ok(resultDto);
+        }
+
+        [Route("{username}")]
+        [HttpGet]
+        public async Task<IActionResult> GetByUsername([FromRoute] string userName)
+        {
+            var resultDto = await _usersService.GetMemberDtoByNameAsync(userName);
+
+            return resultDto == null
+                ? NotFound($"No user found with name: {userName}")
+                : Ok(resultDto);
         }
 
         [HttpDelete("{id:int}")]
@@ -34,7 +48,9 @@ namespace Dating.API.Controllers
         {
             var result = await _usersService.DeleteByIdAsync(id);
 
-            return result ? Ok() : BadRequest();
+            return result
+                ? Ok()
+                : BadRequest();
         }
     }
 }

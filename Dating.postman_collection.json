@@ -12,6 +12,16 @@
 				{
 					"name": "Get All Users",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -45,8 +55,8 @@
 						"method": "GET",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": []
+							"mode": "raw",
+							"raw": ""
 						},
 						"url": {
 							"raw": "{{url_https}}/Users/7",
@@ -62,13 +72,26 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Get user by name Briana",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "POST",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"userName\",\r\n  \"password\": \"pas$$w0rd\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -76,7 +99,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/Users/",
+							"raw": "https://localhost:5001/Users/Briana",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -84,7 +107,7 @@
 							"port": "5001",
 							"path": [
 								"Users",
-								""
+								"Briana"
 							]
 						}
 					},
@@ -96,13 +119,13 @@
 			"name": "Accounts Controller",
 			"item": [
 				{
-					"name": "register",
+					"name": "Register",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"useruser\",\r\n  \"password\": \"passwordpassword\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"string\",\r\n  \"password\": \"string\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -123,7 +146,7 @@
 					"response": []
 				},
 				{
-					"name": "login",
+					"name": "Login as Wilkinson",
 					"event": [
 						{
 							"listen": "test",
@@ -142,7 +165,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"Wilkinson\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
