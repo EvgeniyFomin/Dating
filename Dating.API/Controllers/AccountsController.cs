@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dating.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountsController(
         IUsersService usersService,
         ITokenService tokenService) : ControllerBase
