@@ -9,17 +9,21 @@ import { Member } from '../_models/member';
 })
 
 export class MembersService {
-  private hpptClient = inject(HttpClient);
+  private httpClient = inject(HttpClient);
   private accountService = inject(AccountService);
 
   baseUrl = environment.apiUrl + "users/";
   members: any = [];
 
   getMembers() {
-    return this.hpptClient.get<Member[]>(this.baseUrl);
+    return this.httpClient.get<Member[]>(this.baseUrl);
   }
 
   getMemberByName(userName: string) {
-    return this.hpptClient.get<Member>(this.baseUrl + userName);
+    return this.httpClient.get<Member>(this.baseUrl + userName);
+  }
+
+  getMemberById(id: string) {
+    return this.httpClient.get<Member>(this.baseUrl + id);
   }
 }
