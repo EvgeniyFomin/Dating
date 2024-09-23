@@ -39,12 +39,4 @@ export class AccountService {
       })
     );
   }
-
-  getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${this.currentUser()?.token}`
-      })
-    }
-  }
 }
