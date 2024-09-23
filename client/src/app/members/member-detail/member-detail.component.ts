@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MembersService } from '../../_services/members.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './member-detail.component.css'
 })
 export class MemberDetailComponent {
+private memberService = inject(MembersService);
 
 }
