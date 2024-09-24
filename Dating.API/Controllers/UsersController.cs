@@ -6,7 +6,7 @@ namespace Dating.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UsersController(IUsersService usersService) : ControllerBase
     {
         private readonly IUsersService _usersService = usersService;

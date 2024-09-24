@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dating.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountsController(
         IUsersService usersService,
         ITokenService tokenService) : ControllerBase
@@ -29,7 +29,7 @@ namespace Dating.API.Controllers
                 ? BadRequest("User was not registered")
                 : Ok(new UserDto
                 {
-                    Username = user.UserName,
+                    UserName = user.UserName,
                     Token = _tokenService.CreateToken(user)
                 });
         }
@@ -50,7 +50,7 @@ namespace Dating.API.Controllers
                 ? Ok(
                     new UserDto
                     {
-                        Username = user.UserName,
+                        UserName = user.UserName,
                         Token = _tokenService.CreateToken(user)
                     })
                 : Unauthorized("Invalid user or password");
