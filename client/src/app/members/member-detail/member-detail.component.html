@@ -2,8 +2,7 @@
 <div class="row">
     <div class="col-4">
         <div class="card">
-            <img class="card-img img-thumbnail" src="{{member.mainPhotoUrl || 'user.png'}}"
-                alt="{{member.knownAs}}">
+            <img class="card-img img-thumbnail" src="{{member.mainPhotoUrl || 'user.png'}}" alt="{{member.knownAs}}">
             <div class="card-body">
                 <div>
                     <strong>Location:</strong>
@@ -44,7 +43,7 @@
             </tab>
             <tab heading="Photos" #photoTab="tab">
                 @if(photoTab.active){
-                    <gallery [items]="images" class="gallery"></gallery>
+                <gallery [items]="images" class="gallery"></gallery>
                 }
             </tab>
             <tab heading="Messages">

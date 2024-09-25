@@ -5,13 +5,13 @@
         @if(accountService.currentUser()){
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-                <a routerLink="/members" routerLinkActive="active" class="nav-link">Matches</a>
+                <a routerLink="members" routerLinkActive="active" class="nav-link">Matches</a>
             </li>
             <li class="nav-item">
-                <a routerLink="/lists" routerLinkActive="active" class="nav-link">Lists</a>
+                <a routerLink="lists" routerLinkActive="active" class="nav-link">Lists</a>
             </li>
             <li class="nav-item">
-                <a routerLink="/messages" routerLinkActive="active" class="nav-link">Messages</a>
+                <a routerLink="messages" routerLinkActive="active" class="nav-link">Messages</a>
             </li>
         </ul>
         <div dropdown class="dropdown">
@@ -19,7 +19,7 @@
                 Welcome, {{accountService.currentUser()?.userName | titlecase}}
             </a>
             <div *bsDropdownMenu class="dropdown-menu">
-                <a class="dropdown-item">Edit profile</a>
+                <a routerLink="member/edit" class="dropdown-item">Edit profile</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" (click)="logout()">Logout</a>
             </div>
