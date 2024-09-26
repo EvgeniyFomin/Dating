@@ -10,7 +10,6 @@ import { Member } from '../_models/member';
 
 export class MembersService {
   private httpClient = inject(HttpClient);
-  private accountService = inject(AccountService);
 
   baseUrl = environment.apiUrl + "users/";
   members: any = [];
@@ -25,5 +24,9 @@ export class MembersService {
 
   getMemberById(id: string) {
     return this.httpClient.get<Member>(this.baseUrl + id);
+  }
+
+  updateMember(member: Member) {
+    return this.httpClient.put(this.baseUrl, member);
   }
 }
