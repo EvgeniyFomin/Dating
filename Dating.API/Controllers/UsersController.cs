@@ -1,6 +1,8 @@
 ﻿using Dating.API.Services.Interfaces;
+using Dating.Core.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Dating.API.Controllers
 {
@@ -43,14 +45,16 @@ namespace Dating.API.Controllers
                 : Ok(resultDto);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        [HttpPut]
+        public async Task<IActionResult> Update(MemberUpdateDto updateDto)
         {
-            var result = await _usersService.DeleteByIdAsync(id);
+            var userName = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            return result
-                ? Ok()
-                : BadRequest();
+            if (userName == null) return BadRequest("No userName found in the token");
+
+            return (await _usersService.UpdateUser(updateDto, userName))
+                ? NoContent()
+                : BadRequest("User was not updated");
         }
     }
 }

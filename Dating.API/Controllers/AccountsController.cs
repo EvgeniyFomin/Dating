@@ -21,11 +21,9 @@ namespace Dating.API.Controllers
                 return BadRequest($"User {registerDto.UserName} already exists");
             }
 
-            var user = _usersService.CreateUser(registerDto);
+            var user = await _usersService.CreateUser(registerDto);
 
-            var result = await _usersService.AddAsync(user);
-
-            return result == null
+            return user == null
                 ? BadRequest("User was not registered")
                 : Ok(new UserDto
                 {
