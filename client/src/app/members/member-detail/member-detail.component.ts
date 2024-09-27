@@ -12,6 +12,7 @@ import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
   templateUrl: './member-detail.component.html',
   styleUrl: './member-detail.component.css'
 })
+
 export class MemberDetailComponent implements OnInit {
 
   private memberService = inject(MembersService);

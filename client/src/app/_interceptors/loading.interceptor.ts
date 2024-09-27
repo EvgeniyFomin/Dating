@@ -5,12 +5,12 @@ import { delay, finalize } from 'rxjs';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loaderService = inject(LoaderService);
-  loaderService.busy();
+  loaderService.show();
 
   return next(req).pipe(
     delay(1000),
     finalize(() => {
-      loaderService.idle()
+      loaderService.hide()
     })
   );
 };

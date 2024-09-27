@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './member-edit.component.html',
   styleUrl: './member-edit.component.css'
 })
+
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm?: NgForm;
   @HostListener('window:beforeunload', ['$event']) notify($event: any) {

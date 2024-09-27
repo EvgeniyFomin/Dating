@@ -4,21 +4,21 @@ import { NgxSpinnerService } from 'ngx-spinner';
 @Injectable({
   providedIn: 'root'
 })
-export class LoaderService {
 
+export class LoaderService {
   private spinnerService = inject(NgxSpinnerService);
   busyRequestCount = 0;
 
-  busy() {
+  show() {
     this.busyRequestCount++;
     this.spinnerService.show(undefined, {
-      type: 'line-scale-pulse-out-rapid',
-      bdColor: 'rgbs(255,255,255,0)',
-      color: '#333333'
+      size: "medium",
+      bdColor: "rgba(255, 255, 255, 0)",
+      color: "#db1616"
     })
   }
 
-  idle() {
+  hide() {
     this.busyRequestCount--;
     if (this.busyRequestCount <= 0) {
       this.busyRequestCount = 0;
