@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.css'
 })
+
 export class MessagesComponent {
 
 }

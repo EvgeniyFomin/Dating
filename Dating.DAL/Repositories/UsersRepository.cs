@@ -12,11 +12,6 @@ namespace Dating.DAL.Repositories
         private readonly DataContext _dataContext = dataContext;
         private readonly IMapper _mapper = mapper;
 
-        public void UpdateAsync(User user)
-        {
-            _dataContext.Entry(user).State = EntityState.Modified;
-        }
-
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _dataContext.Users
@@ -36,6 +31,25 @@ namespace Dating.DAL.Repositories
             return await _dataContext.Users
                 .Include(x => x.Photos)
                 .SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _dataContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<User> CreateAsync(User user)
+        {
+            var result = await _dataContext.Users.AddAsync(user);
+
+            await _dataContext.SaveChangesAsync();
+
+            return result.Entity;
+        }
+
+        public async Task<bool> IfExists(string userName)
+        {
+            return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
         }
 
         // members
@@ -59,41 +73,6 @@ namespace Dating.DAL.Repositories
             return await _dataContext.Users
                    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _dataContext.SaveChangesAsync() > 0;
-        }
-
-        // ---- mine
-        public async Task<User> CreateAsync(User user)
-        {
-            var result = await _dataContext.Users.AddAsync(user);
-
-            await _dataContext.SaveChangesAsync();
-
-            return result.Entity;
-        }
-
-        public async Task<bool> DeleteByIdAsync(int id)
-        {
-            var user = await GetByIdAsync(id);
-
-            if (user == null)
-            {
-                return false;
-            }
-
-            _ = _dataContext.Remove(user);
-            _ = await _dataContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<bool> IfExists(string userName)
-        {
-            return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
         }
     }
 }

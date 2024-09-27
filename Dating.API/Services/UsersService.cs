@@ -1,4 +1,5 @@
-﻿using Dating.API.Services.Interfaces;
+﻿using AutoMapper;
+using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.DAL.Repositories;
@@ -7,15 +8,15 @@ using System.Text;
 
 namespace Dating.API.Services
 {
-    public class UsersService(IUsersRepository userRepository) : IUsersService
+    public class UsersService(IUsersRepository userRepository, IMapper mapper) : IUsersService
     {
         private readonly IUsersRepository _userRepository = userRepository;
 
-        public User CreateUser(RegisterUserDto userDto)
+        public async Task<User> CreateUser(RegisterUserDto userDto)
         {
             using var hmac = new HMACSHA512();
 
-            return new User
+            var user = new User
             {
                 UserName = userDto.UserName,
                 Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password)),
@@ -25,16 +26,13 @@ namespace Dating.API.Services
                 City = "",
                 Country = ""
             };
+
+            return await AddAsync(user);
         }
 
         public async Task<User> AddAsync(User user)
         {
             return await _userRepository.CreateAsync(user);
-        }
-
-        public async Task<bool> DeleteByIdAsync(int id)
-        {
-            return await _userRepository.DeleteByIdAsync(id);
         }
 
         public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
@@ -51,6 +49,7 @@ namespace Dating.API.Services
         {
             return await _userRepository.GetByNameAsync(userName);
         }
+
         public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
         {
             return await _userRepository.GetMemberDtoByName(userName);
@@ -76,6 +75,15 @@ namespace Dating.API.Services
             }
 
             return true;
+        }
+
+        public async Task<bool> UpdateUser(MemberUpdateDto memberDto, string userName)
+        {
+            var user = await _userRepository.GetByNameAsync(userName);
+
+            mapper.Map(memberDto, user);
+
+            return await _userRepository.SaveAllAsync();
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Dating.API.MappingProfiles
                     opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url));
 
             CreateMap<Photo, PhotoDto>();
+            CreateMap<MemberUpdateDto, User>();
         }
     }
 }
