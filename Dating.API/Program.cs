@@ -1,6 +1,7 @@
 using Dating.API.Extensions;
 using Dating.API.Middleware;
 using Dating.API.Services;
+using Dating.API.Services.CloudinaryService;
 using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
@@ -18,7 +19,9 @@ builder.Services.AddIdentityServices(builder.Configuration);
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPhotoService, CloudinaryService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
