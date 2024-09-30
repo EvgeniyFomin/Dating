@@ -21,6 +21,7 @@ export class MemberEditComponent implements OnInit {
       $event.returnValue = true;
     }
   };
+  
   private accountService = inject(AccountService);
   private memberService = inject(MembersService);
   private toastr = inject(ToastrService);
