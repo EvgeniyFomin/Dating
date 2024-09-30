@@ -59,20 +59,56 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url_https}}/Users/7",
+							"raw": "{{url_https}}/Users/11",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
 								"Users",
-								"7"
+								"11"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get user by name Briana",
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"introduction\": \"My name's Ana.\",\r\n  \"interests\": \"Music, dancing so on\",\r\n  \"lookingFor\": \"Good friends\",\r\n  \"city\": \"Varna\",\r\n  \"country\": \"Bulgaria\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Users",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by name Anna",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -90,24 +126,55 @@
 						"method": "GET",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"mode": "urlencoded",
+							"urlencoded": []
 						},
 						"url": {
-							"raw": "https://localhost:5001/Users/Briana",
-							"protocol": "https",
+							"raw": "{{url_https}}/Users/Anna",
 							"host": [
-								"localhost"
+								"{{url_https}}"
 							],
-							"port": "5001",
 							"path": [
 								"Users",
-								"Briana"
+								"Anna"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "File",
+									"type": "file",
+									"src": "/D:/Programming/Dating/TestPhoto2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url_https}}/Users/add-photo",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Users",
+								"add-photo"
 							]
 						}
 					},
@@ -146,7 +213,7 @@
 					"response": []
 				},
 				{
-					"name": "Login as Wilkinson",
+					"name": "Login as Ana",
 					"event": [
 						{
 							"listen": "test",
@@ -165,7 +232,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"Wilkinson\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"ana\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -213,17 +280,13 @@
 	"variable": [
 		{
 			"key": "url_https",
-			"value": "https://localhost:5001",
+			"value": "https://localhost:5001/api",
 			"type": "string"
 		},
 		{
 			"key": "bearer_token",
 			"value": "",
 			"type": "string"
-		},
-		{
-			"key": "bearer_tkn",
-			"value": ""
 		}
 	]
 }

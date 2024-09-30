@@ -66,7 +66,11 @@ namespace Dating.API.Controllers
             if (!await _usersService.AddPhotoToUserAsync(user, photo))
                 return BadRequest("User was not updated - photo not added");
 
-            return _photoService.MapToDto(photo);
+            return
+                CreatedAtAction(
+                    nameof(GetByUsername),
+                    new { username = user.UserName },
+                    _photoService.MapToDto(photo));
         }
 
     }
