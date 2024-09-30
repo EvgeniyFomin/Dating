@@ -12,7 +12,7 @@ namespace Dating.API.Services
     {
         private readonly IUsersRepository _userRepository = userRepository;
 
-        public async Task<User> CreateUser(RegisterUserDto userDto)
+        public async Task<User> CreateUserAsync(RegisterUserDto userDto)
         {
             using var hmac = new HMACSHA512();
 
@@ -77,11 +77,18 @@ namespace Dating.API.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(MemberUpdateDto memberDto, string userName)
+        public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)
         {
             var user = await _userRepository.GetByNameAsync(userName);
 
             mapper.Map(memberDto, user);
+
+            return await _userRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
+        {
+            user.Photos.Add(photo);
 
             return await _userRepository.SaveAllAsync();
         }

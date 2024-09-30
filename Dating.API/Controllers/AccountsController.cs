@@ -21,7 +21,7 @@ namespace Dating.API.Controllers
                 return BadRequest($"User {registerDto.UserName} already exists");
             }
 
-            var user = await _usersService.CreateUser(registerDto);
+            var user = await _usersService.CreateUserAsync(registerDto);
 
             return user == null
                 ? BadRequest("User was not registered")
@@ -33,7 +33,7 @@ namespace Dating.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(RegisterUserDto registerDto)
+        public async Task<ActionResult<UserDto>> Login(RegisterUserDto registerDto)
         {
             var user = await _usersService.GetByNameAsync(registerDto.UserName);
 

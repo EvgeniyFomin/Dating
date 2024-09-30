@@ -11,8 +11,9 @@ namespace Dating.API.Services.Interfaces
         Task<User?> GetByNameAsync(string userName);
         Task<User> AddAsync(User user);
         Task<bool> CheckIfExistsAsync(string userName);
-        Task<User> CreateUser(RegisterUserDto userDto);
+        Task<User> CreateUserAsync(RegisterUserDto userDto);
         bool CheckIfPasswordValid(User user, string password);
-        Task<bool> UpdateUser(MemberUpdateDto memberDto, string userName);
+        Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName);
+        Task<bool> AddPhotoToUserAsync(User user, Photo photo);
     }
 }
