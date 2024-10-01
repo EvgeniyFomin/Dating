@@ -73,5 +73,15 @@ namespace Dating.API.Controllers
                     _photoService.MapToDto(photo));
         }
 
+        [HttpPut("set-main-photo/{photoId:int}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var user = await _usersService.GetByNameAsync(User.GetUsername());
+            if (user == null) return BadRequest("User cannot be found");
+
+            return (await _usersService.SetPhotoAsMainToUserAsync(user, photoId))
+                    ? NoContent()
+                    : BadRequest("User's main photo was not updated");
+        }
     }
 }

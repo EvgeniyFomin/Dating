@@ -38,6 +38,8 @@ namespace Dating.API.Services.CloudinaryService
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
+            if (uploadResult.Error != null) throw new Exception($"Photo was not uploaded. Error: {uploadResult.Error.Message}");
+
             return GetPhotoFromResult(uploadResult);
         }
 
@@ -55,8 +57,6 @@ namespace Dating.API.Services.CloudinaryService
 
         private static Photo GetPhotoFromResult(ImageUploadResult result)
         {
-            if (result.Error != null) throw new Exception($"Photo was not uploaded. Error: {result.Error.Message}");
-
             return new Photo
             {
                 Url = result.SecureUrl.AbsoluteUri,

@@ -15,5 +15,6 @@ namespace Dating.API.Services.Interfaces
         bool CheckIfPasswordValid(User user, string password);
         Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName);
         Task<bool> AddPhotoToUserAsync(User user, Photo photo);
+        Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);
     }
 }
