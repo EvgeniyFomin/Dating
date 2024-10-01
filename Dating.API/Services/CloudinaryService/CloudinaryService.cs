@@ -55,7 +55,13 @@ namespace Dating.API.Services.CloudinaryService
 
         private static Photo GetPhotoFromResult(ImageUploadResult result)
         {
-            return new Photo { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId };
+            if (result.Error != null) throw new Exception($"Photo was not uploaded. Error: {result.Error.Message}");
+
+            return new Photo
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId
+            };
         }
     }
 }
