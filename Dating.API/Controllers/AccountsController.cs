@@ -49,7 +49,8 @@ namespace Dating.API.Controllers
                     new UserDto
                     {
                         UserName = user.UserName,
-                        Token = _tokenService.CreateToken(user)
+                        Token = _tokenService.CreateToken(user),
+                        PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
                     })
                 : Unauthorized("Invalid user or password");
         }
