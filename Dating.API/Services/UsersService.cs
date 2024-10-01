@@ -92,5 +92,18 @@ namespace Dating.API.Services
 
             return await _userRepository.SaveAllAsync();
         }
+
+        public async Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId)
+        {
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null || photo.IsMain) return await Task.FromResult(false);
+
+            user.Photos.Where(x => x.IsMain)?.ToList()?.ForEach(x => x.IsMain = false);
+
+            photo.IsMain = true;
+
+            return await _userRepository.SaveAllAsync();
+        }
     }
 }
