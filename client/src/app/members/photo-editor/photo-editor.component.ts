@@ -1,3 +1,4 @@
+import { Photo } from './../../_models/photo';
 import { Component, inject, input, OnInit, output } from '@angular/core';
 import { Member } from '../../_models/member';
 import { DecimalPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
@@ -5,6 +6,7 @@ import { FileUploader, FileUploadModule } from 'ng2-file-upload';
 import { AccountService } from '../../_services/account.service';
 import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { MembersService } from '../../_services/members.service';
 
 @Component({
   selector: 'app-photo-editor',
@@ -16,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 
 export class PhotoEditorComponent implements OnInit {
   private accountService = inject(AccountService);
+  private memberService = inject(MembersService);
   private toastr = inject(ToastrService);
   member = input.required<Member>();
   memberChange = output<Member>();
@@ -57,5 +60,38 @@ export class PhotoEditorComponent implements OnInit {
       this.toastr.error(resp?.message);
       console.log(resp?.message);
     }
+  }
+
+  setMainPhoto(photo: Photo) {
+    this.memberService.setMainPhoto(photo).subscribe({
+      next: _ => {
+        const user = this.accountService.currentUser();
+
+        if (user) {
+          user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(user);
+        }
+
+        const updatedMember = { ...this.member() }
+        updatedMember.mainPhotoUrl = photo.url;
+        updatedMember.photos.forEach(p => {
+          if (p.isMain) p.isMain = false;
+          if (p.id === photo.id) p.isMain = true;
+        });
+
+        this.memberChange.emit(updatedMember);
+      }
+    })
+  }
+
+  deletePhoto(photo: Photo) {
+    this.memberService.deletePhoto(photo).subscribe({
+      next: _ => {
+        const index = this.member().photos.indexOf(photo, 0);
+        if (index > -1) {
+          this.member().photos.splice(index, 1);
+        }
+      }
+    })
   }
 }
