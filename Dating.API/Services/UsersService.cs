@@ -106,17 +106,17 @@ namespace Dating.API.Services
             return await _userRepository.SaveAllAsync();
         }
 
-        public async Task<string?> DeletePhotoReturnPublicIdAsync(User user, int photoId)
+        public async Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId)
         {
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
-            if (photo == null) return string.Empty;
+            if (photo == null || photo.IsMain) return (false, null);
 
             user.Photos.Remove(photo);
 
             return await _userRepository.SaveAllAsync()
-                ? photo.PublicId
-                : string.Empty;
+                ? (true, photo.PublicId)
+                : (false, null);
         }
     }
 }

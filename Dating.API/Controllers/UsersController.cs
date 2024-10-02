@@ -89,15 +89,19 @@ namespace Dating.API.Controllers
             var user = await _usersService.GetByNameAsync(User.GetUsername());
             if (user == null) return BadRequest("User cannot be found");
 
-            var publicId = await _usersService.DeletePhotoReturnPublicIdAsync(user, photoId);
+            var (result, publicId) = await _usersService.DeletePhotoReturnPublicIdAsync(user, photoId);
 
-            if (string.IsNullOrWhiteSpace(publicId)) return BadRequest("User's photo was not deleted");
+            if (!result) return BadRequest("User's photo cannot be deleted");
 
-            var deletionResult = await _photoService.DeletePhotoAsync(publicId);
+            if (!string.IsNullOrWhiteSpace(publicId))
+            {
+                var deletionCloudinaryResult = await _photoService.DeletePhotoAsync(publicId);
+                return deletionCloudinaryResult.Error == null
+                    ? Ok()
+                    : BadRequest(deletionCloudinaryResult.Error);
+            }
 
-            return deletionResult.Error == null
-                ? NoContent()
-                : throw new Exception($"Photo with PublicId: {publicId}");
+            return Ok();
         }
     }
 }
