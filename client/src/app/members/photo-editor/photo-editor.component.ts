@@ -66,7 +66,6 @@ export class PhotoEditorComponent implements OnInit {
     this.memberService.setMainPhoto(photo).subscribe({
       next: _ => {
         const user = this.accountService.currentUser();
-
         if (user) {
           user.photoUrl = photo.url;
           this.accountService.setCurrentUser(user);
@@ -87,10 +86,9 @@ export class PhotoEditorComponent implements OnInit {
   deletePhoto(photo: Photo) {
     this.memberService.deletePhoto(photo).subscribe({
       next: _ => {
-        const index = this.member().photos.indexOf(photo, 0);
-        if (index > -1) {
-          this.member().photos.splice(index, 1);
-        }
+        const updatedMember = { ...this.member() }
+        updatedMember.photos = updatedMember.photos.filter(x => x.id !== photo.id);
+        this.memberChange.emit(updatedMember);
       }
     })
   }

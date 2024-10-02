@@ -62,10 +62,7 @@ export class MembersService {
       tap(() => {
         this.members.update(members => members.map(m => {
           if (m.photos.includes(photo)) {
-            const index = m.photos.indexOf(photo, 0);
-            if (index > -1) {
-              m.photos.splice(index, 1);
-            }
+            m.photos = m.photos.filter(x => x.id !== photo.id)
           }
           return m;
         }));
