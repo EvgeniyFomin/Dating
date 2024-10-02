@@ -56,4 +56,20 @@ export class MembersService {
       })
     );
   }
+
+  deletePhoto(photo: Photo) {
+    return this.httpClient.delete(this.baseUrl + "delete-photo/" + photo.id).pipe(
+      tap(() => {
+        this.members.update(members => members.map(m => {
+          if (m.photos.includes(photo)) {
+            const index = m.photos.indexOf(photo, 0);
+            if (index > -1) {
+              m.photos.splice(index, 1);
+            }
+          }
+          return m;
+        }));
+      })
+    );
+  }
 }
