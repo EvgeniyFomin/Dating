@@ -105,5 +105,18 @@ namespace Dating.API.Services
 
             return await _userRepository.SaveAllAsync();
         }
+
+        public async Task<string?> DeletePhotoReturnPublicIdAsync(User user, int photoId)
+        {
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null) return string.Empty;
+
+            user.Photos.Remove(photo);
+
+            return await _userRepository.SaveAllAsync()
+                ? photo.PublicId
+                : string.Empty;
+        }
     }
 }

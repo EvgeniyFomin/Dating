@@ -66,8 +66,7 @@ namespace Dating.API.Controllers
             if (!await _usersService.AddPhotoToUserAsync(user, photo))
                 return BadRequest("User was not updated - photo not added");
 
-            return
-                CreatedAtAction(
+            return CreatedAtAction(
                     nameof(GetByUsername),
                     new { username = user.UserName },
                     _photoService.MapToDto(photo));
@@ -82,6 +81,23 @@ namespace Dating.API.Controllers
             return (await _usersService.SetPhotoAsMainToUserAsync(user, photoId))
                     ? NoContent()
                     : BadRequest("User's main photo was not updated");
+        }
+
+        [HttpDelete("delete-photo/{photoId:int}")]
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            var user = await _usersService.GetByNameAsync(User.GetUsername());
+            if (user == null) return BadRequest("User cannot be found");
+
+            var publicId = await _usersService.DeletePhotoReturnPublicIdAsync(user, photoId);
+
+            if (string.IsNullOrWhiteSpace(publicId)) return BadRequest("User's photo was not deleted");
+
+            var deletionResult = await _photoService.DeletePhotoAsync(publicId);
+
+            return deletionResult.Error == null
+                ? NoContent()
+                : throw new Exception($"Photo with PublicId: {publicId}");
         }
     }
 }

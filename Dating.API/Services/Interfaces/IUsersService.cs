@@ -16,5 +16,6 @@ namespace Dating.API.Services.Interfaces
         Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName);
         Task<bool> AddPhotoToUserAsync(User user, Photo photo);
         Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);
+        Task<string?> DeletePhotoReturnPublicIdAsync(User user, int photoId);
     }
 }
