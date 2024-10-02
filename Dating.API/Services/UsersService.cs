@@ -12,7 +12,7 @@ namespace Dating.API.Services
     {
         private readonly IUsersRepository _userRepository = userRepository;
 
-        public async Task<User> CreateUser(RegisterUserDto userDto)
+        public async Task<User> CreateUserAsync(RegisterUserDto userDto)
         {
             using var hmac = new HMACSHA512();
 
@@ -77,13 +77,46 @@ namespace Dating.API.Services
             return true;
         }
 
-        public async Task<bool> UpdateUser(MemberUpdateDto memberDto, string userName)
+        public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)
         {
             var user = await _userRepository.GetByNameAsync(userName);
 
             mapper.Map(memberDto, user);
 
             return await _userRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
+        {
+            user.Photos.Add(photo);
+
+            return await _userRepository.SaveAllAsync();
+        }
+
+        public async Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId)
+        {
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null || photo.IsMain) return await Task.FromResult(false);
+
+            user.Photos.Where(x => x.IsMain)?.ToList()?.ForEach(x => x.IsMain = false);
+
+            photo.IsMain = true;
+
+            return await _userRepository.SaveAllAsync();
+        }
+
+        public async Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId)
+        {
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null || photo.IsMain) return (false, null);
+
+            user.Photos.Remove(photo);
+
+            return await _userRepository.SaveAllAsync()
+                ? (true, photo.PublicId)
+                : (false, null);
         }
     }
 }

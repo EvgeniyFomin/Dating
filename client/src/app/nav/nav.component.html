@@ -15,6 +15,7 @@
             </li>
         </ul>
         <div dropdown class="dropdown">
+            <img class="me-2" src="{{accountService.currentUser()?.photoUrl || 'user.png'}}" alt="user main mage">
             <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">
                 Welcome, {{accountService.currentUser()?.userName | titlecase}}
             </a>
