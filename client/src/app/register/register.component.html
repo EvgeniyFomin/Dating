@@ -1,40 +1,10 @@
 <form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
     <h2 class="text-center">Sign up</h2>
     <hr>
-    <div class="mb-3 form-floating">
-        <input [class.is-invalid]="registerForm.get('userName')?.errors && registerForm.get('userName')?.touched"
-            type="text" class="form-control" formControlName="userName" placeholder="Username">
-        <label>Username</label>
-        <div class="invalid-feedback">Please enter a user name</div>
-    </div>
-    <div class="mb-3 form-floating">
-        <input [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
-            type="password" class="form-control" formControlName="password" placeholder="Password">
-        <label>Password</label>
-        <div *ngIf="registerForm.get('password')?.hasError('required')" class="invalid-feedback">
-            Please enter a password
-        </div>
-        <div *ngIf="registerForm.get('password')?.hasError('minlength')" class="invalid-feedback">
-            Password must be at least 4 charachters
-        </div>
-        <div *ngIf="registerForm.get('password')?.hasError('maxlength')" class="invalid-feedback">
-            Password must be at most 8 charachters
-        </div>
-    </div>
-    <div class="mb-3 form-floating">
-        <input
-            [class.is-invalid]="registerForm.get('confirmPassword')?.errors && registerForm.get('confirmPassword')?.touched"
-            type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirm password">
-        <label>Confirm password</label>
-        
-        <div *ngIf="registerForm.get('confirmPassword')?.hasError('required')" class="invalid-feedback">
-            Please fill the confirm password field
-        </div>
-        <div *ngIf="registerForm.get('confirmPassword')?.hasError('isNotMatching')" class="invalid-feedback">
-            Confrm password must match password
-        </div>
-        
-    </div>
+    <app-text-input [formControl]="$any(registerForm.controls['userName'])" [label]="'User Name'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'" [type]="'password'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confim Password'" [type]="'password'"></app-text-input>
+
     <div class="form-group text-center">
         <button class="btn btn-success me-2" type="submit">Register</button>
         <button class="btn btn-secondary me-2" type="button" (click)="cancel()">Cancel</button>
