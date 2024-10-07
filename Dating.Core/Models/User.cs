@@ -8,7 +8,6 @@ namespace Dating.Core.Models
         public required string UserName { get; set; }
         public byte[] Password { get; set; } = [];
         public byte[] PasswordSalt { get; set; } = [];
-
         public Gender Gender { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public required string KnownAs { get; set; }
