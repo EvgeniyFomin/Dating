@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
       knownAs: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       confirmPassword: ['', [Validators.required, this.matchValues('password')]],
-      gender: [3],
+      gender: ['3'],
       dateOfBirth: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
@@ -55,18 +55,18 @@ export class RegisterComponent implements OnInit {
 
   register() {
     console.log(this.registerForm.value);
-    // this.accountService.register(this.model).subscribe({
-    //   next: response => {
-    //     console.log(response);
-    //     this.cancel();
-    //   },
-    //   error: error => {
-    //     const errors: string[] = error;
-    //     errors.forEach(item => {
-    //       this.toastr.error(item);
-    //     });
-    //   }
-    // });
+    this.accountService.register(this.registerForm.value).subscribe({
+      next: response => {
+        console.log(response);
+        this.cancel();
+      },
+      error: error => {
+        const errors: string[] = error;
+        errors.forEach(item => {
+          this.toastr.error(item);
+        });
+      }
+    });
   }
 
   cancel() {
