@@ -18,6 +18,11 @@ namespace Dating.API.MappingProfiles
 
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, User>();
+            CreateMap<RegisterUserDto, User>()
+                .ForMember(dest => dest.Password, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore());
+
+            CreateMap<string, DateOnly>().ConvertUsing(s => DateOnly.Parse(s));
         }
     }
 }
