@@ -14,18 +14,11 @@ namespace Dating.API.Services
 
         public async Task<User> CreateUserAsync(RegisterUserDto userDto)
         {
-            using var hmac = new HMACSHA512();
+            var user = mapper.Map<User>(userDto);
 
-            var user = new User
-            {
-                UserName = userDto.UserName,
-                Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password)),
-                PasswordSalt = hmac.Key,
-                // ===== to disable error
-                KnownAs = "",
-                City = "",
-                Country = ""
-            };
+            using var hmac = new HMACSHA512();
+            user.Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password!));
+            user.PasswordSalt = hmac.Key;
 
             return await AddAsync(user);
         }
@@ -88,6 +81,9 @@ namespace Dating.API.Services
 
         public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
         {
+            if (user.Photos.Count == 0)
+                photo.IsMain = true;
+
             user.Photos.Add(photo);
 
             return await _userRepository.SaveAllAsync();

@@ -28,12 +28,13 @@ namespace Dating.API.Controllers
                 : Ok(new UserDto
                 {
                     UserName = user.UserName,
-                    Token = _tokenService.CreateToken(user)
+                    Token = _tokenService.CreateToken(user),
+                    KnownAs = user.KnownAs
                 });
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(RegisterUserDto registerDto)
+        public async Task<ActionResult<UserDto>> Login(LoginUserDto registerDto)
         {
             var user = await _usersService.GetByNameAsync(registerDto.UserName);
 
@@ -50,7 +51,8 @@ namespace Dating.API.Controllers
                     {
                         UserName = user.UserName,
                         Token = _tokenService.CreateToken(user),
-                        PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+                        PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                        KnownAs = user.KnownAs
                     })
                 : Unauthorized("Invalid user or password");
         }
