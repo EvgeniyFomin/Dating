@@ -34,7 +34,7 @@ namespace Dating.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(RegisterUserDto registerDto)
+        public async Task<ActionResult<UserDto>> Login(LoginUserDto registerDto)
         {
             var user = await _usersService.GetByNameAsync(registerDto.UserName);
 

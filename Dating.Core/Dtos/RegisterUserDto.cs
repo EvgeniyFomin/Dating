@@ -3,16 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dating.Core.Dtos
 {
-    public class RegisterUserDto
+    public class RegisterUserDto : LoginUserDto
     {
-        [Required]
-        [MaxLength(100)]
-        public string UserName { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(8, MinimumLength = 3)]
-        public string Password { get; set; } = string.Empty;
-
         [Required]
         public string? Gender { get; set; }
 
