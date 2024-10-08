@@ -81,6 +81,9 @@ namespace Dating.API.Services
 
         public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
         {
+            if (user.Photos.Count == 0)
+                photo.IsMain = true;
+
             user.Photos.Add(photo);
 
             return await _userRepository.SaveAllAsync();

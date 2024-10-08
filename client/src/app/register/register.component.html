@@ -2,35 +2,44 @@
     <h2 class="text-center">Sign up</h2>
     <hr>
     <app-text-input [formControl]="$any(registerForm.controls['userName'])" [label]="'User Name'"></app-text-input>
-    <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'" [type]="'password'"></app-text-input>
-    <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confim Password'" [type]="'password'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'"
+        [type]="'password'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confim Password'"
+        [type]="'password'"></app-text-input>
 
-    <div class="mb-3">
+    <div class="mb-3 text-center">
         <label style="margin-right: 10px;">Gender is:</label>
         <label class="form-check-label" style="margin-right: 10px;">
-            <input type="radio" class="form-check-input" value= 1 formControlName="gender" > Male
+            <input type="radio" class="form-check-input" value=1 formControlName="gender"> Male
         </label>
         <label class="form-check-label" style="margin-right: 10px;">
-            <input type="radio" class="form-check-input" value= 2 formControlName="gender"> Female
+            <input type="radio" class="form-check-input" value=2 formControlName="gender"> Female
         </label>
         <label class="form-check-label" style="margin-right: 10px;">
-            <input type="radio" class="form-check-input" value= 3 formControlName="gender"> Other
+            <input type="radio" class="form-check-input" value=3 formControlName="gender"> Other
         </label>
     </div>
 
     <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'Known as'"></app-text-input>
-    <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of birth'" [maxDate]="maxDate"></app-date-picker>
+    <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of birth'"
+        [maxDate]="maxDate"></app-date-picker>
 
 
     <app-text-input [formControl]="$any(registerForm.controls['city'])" [label]="'City'"></app-text-input>
     <app-text-input [formControl]="$any(registerForm.controls['country'])" [label]="'Country'"></app-text-input>
 
+    @if(validationErrors){
+    <div class="alert alert-danger">
+        <ul>
+            @for (error of validationErrors; track $index) {
+            <li>{{error}}</li>
+            }
+        </ul>
+    </div>
+    }
+
     <div class="form-group text-center">
-        <button class="btn btn-success me-2" type="submit">Register</button>
+        <button class="btn btn-success me-2" type="submit" >Register</button> 
         <button class="btn btn-secondary me-2" type="button" (click)="cancel()">Cancel</button>
     </div>
 </form>
-
-<p>Form value: {{registerForm.value | json}}</p>
-<p>Form status: {{registerForm.status | json}}</p>
-<p>confirmPassword Errors: {{registerForm.get('confirmPassword')?.errors| json}}</p>
