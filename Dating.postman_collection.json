@@ -25,12 +25,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url_https}}/Users",
+							"raw": "{{url_https}}/Users?PageNumber=3&PageSize=3",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
 								"Users"
+							],
+							"query": [
+								{
+									"key": "PageNumber",
+									"value": "3"
+								},
+								{
+									"key": "PageSize",
+									"value": "3"
+								}
 							]
 						}
 					},

@@ -1,6 +1,6 @@
 ﻿namespace Dating.Core.Models.Pagination
 {
-    public class UserParams
+    public class PaginationParameters
     {
         private const int MaxPageSize = 50;
         private int _pageSize = 10;

@@ -1,6 +1,8 @@
 ﻿using Dating.API.Extensions;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
+using Dating.Core.Extensions;
+using Dating.Core.Models.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +17,14 @@ namespace Dating.API.Controllers
         private readonly IPhotoService _photoService = photoService;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll()
+        public async Task<ActionResult<PagedList<MemberDto>>> GetAll([FromQuery] PaginationParameters parameters)
         {
-            var resultsDto = await _usersService.GetAllMemberDtosAsync();
+            var resultDto = await _usersService.GetPagedMemberDtosAsync(parameters);
 
-            return resultsDto.Any()
-                ? Ok(resultsDto)
+            Response.AddPaginationHeader(resultDto);
+
+            return resultDto.Any()
+                ? Ok(resultDto)
                 : NotFound("No users are regiristered in the system yet");
         }
 

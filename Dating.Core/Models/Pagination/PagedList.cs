@@ -4,11 +4,11 @@ namespace Dating.Core.Models.Pagination
 {
     public class PagedList<T> : List<T>
     {
-        public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+        public PagedList(IEnumerable<T> items, int count, PaginationParameters parameters)
         {
-            CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            PageSize = pageSize;
+            CurrentPage = parameters.PageNumber;
+            TotalPages = (int)Math.Ceiling(count / (double)parameters.PageSize);
+            PageSize = parameters.PageSize;
             TotalCount = count;
             AddRange(items);
         }
@@ -18,12 +18,12 @@ namespace Dating.Core.Models.Pagination
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+        public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, PaginationParameters parameters)
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await source.Skip((parameters.PageNumber - 1) * parameters.PageSize).Take(parameters.PageSize).ToListAsync();
 
-            return new PagedList<T>(items, count, pageNumber, pageSize);
+            return new PagedList<T>(items, count, parameters);
         }
     }
 }

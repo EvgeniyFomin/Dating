@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
+using Dating.Core.Models.Pagination;
 using Dating.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,11 +54,11 @@ namespace Dating.DAL.Repositories
         }
 
         // members
-        public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
+        public async Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters)
         {
-            return await _dataContext.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var query = _dataContext.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider);
+
+            return await PagedList<MemberDto>.CreateAsync(query, parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByName(string name)
