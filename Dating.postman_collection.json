@@ -25,7 +25,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url_https}}/Users?PageNumber=3&PageSize=3",
+							"raw": "{{url_https}}/Users?PageNumber=1&PageSize=4&Gender=2&MinAge=18&MaxAge=40",
 							"host": [
 								"{{url_https}}"
 							],
@@ -35,11 +35,23 @@
 							"query": [
 								{
 									"key": "PageNumber",
-									"value": "3"
+									"value": "1"
 								},
 								{
 									"key": "PageSize",
-									"value": "3"
+									"value": "4"
+								},
+								{
+									"key": "Gender",
+									"value": "2"
+								},
+								{
+									"key": "MinAge",
+									"value": "18"
+								},
+								{
+									"key": "MaxAge",
+									"value": "40"
 								}
 							]
 						}
@@ -202,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"string\",\r\n  \"password\": \"string\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"sixth\",\r\n  \"knownAs\": \"6th element\",\r\n  \"password\": \"passs\",\r\n  \"confirmPassword\": \"passs\",\r\n  \"gender\": \"2\",\r\n  \"dateOfBirth\": \"2006-08-31\",\r\n  \"city\": \"burgas\",\r\n  \"country\": \"bulgaria\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"

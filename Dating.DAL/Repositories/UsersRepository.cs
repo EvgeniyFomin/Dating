@@ -56,9 +56,20 @@ namespace Dating.DAL.Repositories
         // members
         public async Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters)
         {
-            var query = _dataContext.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider);
+            var query = _dataContext.Users.AsQueryable();
+            query = query.Where(x => x.UserName != parameters.CurrentUserName);
 
-            return await PagedList<MemberDto>.CreateAsync(query, parameters);
+            if (parameters.Gender != null)
+            {
+                query = query.Where(x => x.Gender == parameters.Gender);
+            }
+
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameters.MaxAge - 1));
+            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameters.MinAge));
+
+            query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider), parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByName(string name)

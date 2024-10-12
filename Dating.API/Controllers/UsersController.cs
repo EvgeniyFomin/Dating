@@ -19,6 +19,7 @@ namespace Dating.API.Controllers
         [HttpGet]
         public async Task<ActionResult<PagedList<MemberDto>>> GetAll([FromQuery] PaginationParameters parameters)
         {
+            parameters.CurrentUserName = User.GetUsername();
             var resultDto = await _usersService.GetPagedMemberDtosAsync(parameters);
 
             Response.AddPaginationHeader(resultDto);
