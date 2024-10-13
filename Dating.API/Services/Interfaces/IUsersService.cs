@@ -18,5 +18,6 @@ namespace Dating.API.Services.Interfaces
         Task<bool> AddPhotoToUserAsync(User user, Photo photo);
         Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);
         Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId);
+        Task<bool> UpdateLastActivityDateAsync(int userId);
     }
 }

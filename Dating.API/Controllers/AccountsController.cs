@@ -41,6 +41,8 @@ namespace Dating.API.Controllers
 
             var result = _usersService.CheckIfPasswordValid(user, registerDto.Password);
 
+            if (result) await _usersService.UpdateLastActivityDateAsync(user.Id);
+
             return result
                 ? Ok(CreateUserDto(user))
                 : Unauthorized("Invalid user or password");
