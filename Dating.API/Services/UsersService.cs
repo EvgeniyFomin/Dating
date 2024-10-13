@@ -115,5 +115,10 @@ namespace Dating.API.Services
                 ? (true, photo.PublicId)
                 : (false, null);
         }
+
+        public async Task<bool> UpdateLastActivityDateAsync(int userId)
+        {
+            return await _userRepository.UpdateLastActiveDateAsync(userId);
+        }
     }
 }

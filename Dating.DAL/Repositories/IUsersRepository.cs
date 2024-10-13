@@ -18,6 +18,7 @@ namespace Dating.DAL.Repositories
 
         Task<User> CreateAsync(User user);
         Task<bool> IfExists(string userName);
+        Task<bool> UpdateLastActiveDateAsync(int id);
         Task<bool> SaveAllAsync();
     }
 }

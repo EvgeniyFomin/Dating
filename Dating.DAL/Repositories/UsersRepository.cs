@@ -69,6 +69,12 @@ namespace Dating.DAL.Repositories
 
             query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
 
+            query = parameters.OrderBy switch
+            {
+                "created" => query.OrderByDescending(x => x.Created),
+                _ => query.OrderByDescending(x => x.LastActive)
+            };
+
             return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider), parameters);
         }
 
@@ -85,6 +91,15 @@ namespace Dating.DAL.Repositories
             return await _dataContext.Users
                    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> UpdateLastActiveDateAsync(int id)
+        {
+            var user = _dataContext.Users.First(a => a.Id == id);
+            
+            user.LastActive = DateTime.UtcNow;
+
+           return await SaveAllAsync();
         }
     }
 }
