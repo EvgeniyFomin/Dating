@@ -1,11 +1,12 @@
 import { UserParams } from './../_models/userParams';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, model, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../_models/member';
 import { Photo } from '../_models/photo';
 import { PaginatedResult } from '../_models/pagination';
 import { of } from 'rxjs';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,21 +14,28 @@ import { of } from 'rxjs';
 
 export class MembersService {
   private httpClient = inject(HttpClient);
+  private accountService = inject(AccountService);
   baseUrl = environment.apiUrl + "users/";
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
   memberCache = new Map();
+  user = this.accountService.currentUser();
+  userParams = signal<UserParams>(new UserParams(this.user));
 
-  getMembers(userParams: UserParams) {
-    const response = this.memberCache.get(Object.values(userParams).join('-'));
+  resetUserParams() {
+    this.userParams.set(new UserParams(this.user));
+  }
+
+  getMembers() {
+    const response = this.memberCache.get(Object.values(this.userParams()).join('-'));
 
     if (response) return this.setPaginatedResponse(response);
 
-    let params = this.setPaginationHeaders(userParams);
+    let params = this.setPaginationHeaders(this.userParams());
 
     return this.httpClient.get<Member[]>(this.baseUrl, { observe: 'response', params: params }).subscribe({
       next: response => {
         this.setPaginatedResponse(response);
-        this.memberCache.set(Object.values(userParams).join('-'), response);
+        this.memberCache.set(Object.values(this.userParams()).join('-'), response);
       }
     });
   }
