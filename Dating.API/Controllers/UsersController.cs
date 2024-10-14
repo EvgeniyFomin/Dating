@@ -1,11 +1,15 @@
 ﻿using Dating.API.Extensions;
+using Dating.API.Middleware;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
+using Dating.Core.Extensions;
+using Dating.Core.Models.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dating.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -15,12 +19,15 @@ namespace Dating.API.Controllers
         private readonly IPhotoService _photoService = photoService;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetAll()
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] PaginationParameters parameters)
         {
-            var resultsDto = await _usersService.GetAllMemberDtosAsync();
+            parameters.CurrentUserName = User.GetUserName();
+            var resultDto = await _usersService.GetPagedMemberDtosAsync(parameters);
 
-            return resultsDto.Any()
-                ? Ok(resultsDto)
+            Response.AddPaginationHeader(resultDto);
+
+            return resultDto.Any()
+                ? Ok(resultDto)
                 : NotFound("No users are regiristered in the system yet");
         }
 
@@ -49,7 +56,7 @@ namespace Dating.API.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(MemberUpdateDto updateDto)
         {
-            return (await _usersService.UpdateUserAsync(updateDto, User.GetUsername()))
+            return (await _usersService.UpdateUserAsync(updateDto, User.GetUserName()))
                 ? NoContent()
                 : BadRequest("User was not updated");
         }
@@ -57,7 +64,7 @@ namespace Dating.API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            var user = await _usersService.GetByNameAsync(User.GetUsername());
+            var user = await _usersService.GetByNameAsync(User.GetUserName());
             if (user == null) return BadRequest("User cannot be updated");
 
             var photo = await _photoService.AddPhotoAsync(file);
@@ -75,7 +82,7 @@ namespace Dating.API.Controllers
         [HttpPut("set-main-photo/{photoId:int}")]
         public async Task<ActionResult> SetMainPhoto(int photoId)
         {
-            var user = await _usersService.GetByNameAsync(User.GetUsername());
+            var user = await _usersService.GetByNameAsync(User.GetUserName());
             if (user == null) return BadRequest("User cannot be found");
 
             return (await _usersService.SetPhotoAsMainToUserAsync(user, photoId))
@@ -86,7 +93,7 @@ namespace Dating.API.Controllers
         [HttpDelete("delete-photo/{photoId:int}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
-            var user = await _usersService.GetByNameAsync(User.GetUsername());
+            var user = await _usersService.GetByNameAsync(User.GetUserName());
             if (user == null) return BadRequest("User cannot be found");
 
             var (result, publicId) = await _usersService.DeletePhotoReturnPublicIdAsync(user, photoId);

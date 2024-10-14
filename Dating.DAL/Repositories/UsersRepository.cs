@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
+using Dating.Core.Models.Pagination;
 using Dating.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,11 +54,28 @@ namespace Dating.DAL.Repositories
         }
 
         // members
-        public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
+        public async Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters)
         {
-            return await _dataContext.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var query = _dataContext.Users.AsQueryable();
+            query = query.Where(x => x.UserName != parameters.CurrentUserName);
+
+            if (parameters.Gender != null)
+            {
+                query = query.Where(x => x.Gender == parameters.Gender);
+            }
+
+            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameters.MaxAge - 1));
+            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-parameters.MinAge));
+
+            query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+            query = parameters.OrderBy switch
+            {
+                "created" => query.OrderByDescending(x => x.Created),
+                _ => query.OrderByDescending(x => x.LastActive)
+            };
+
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider), parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByName(string name)
@@ -73,6 +91,15 @@ namespace Dating.DAL.Repositories
             return await _dataContext.Users
                    .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> UpdateLastActiveDateAsync(int id)
+        {
+            var user = _dataContext.Users.First(a => a.Id == id);
+            
+            user.LastActive = DateTime.UtcNow;
+
+           return await SaveAllAsync();
         }
     }
 }
