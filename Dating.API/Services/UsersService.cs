@@ -2,6 +2,7 @@
 using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
+using Dating.Core.Models.Pagination;
 using Dating.DAL.Repositories;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,9 +29,9 @@ namespace Dating.API.Services
             return await _userRepository.CreateAsync(user);
         }
 
-        public async Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync()
+        public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(PaginationParameters parameters)
         {
-            return await _userRepository.GetAllMemberDtosAsync();
+            return await _userRepository.GetMemberDtosAsync(parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
@@ -113,6 +114,11 @@ namespace Dating.API.Services
             return await _userRepository.SaveAllAsync()
                 ? (true, photo.PublicId)
                 : (false, null);
+        }
+
+        public async Task<bool> UpdateLastActivityDateAsync(int userId)
+        {
+            return await _userRepository.UpdateLastActiveDateAsync(userId);
         }
     }
 }

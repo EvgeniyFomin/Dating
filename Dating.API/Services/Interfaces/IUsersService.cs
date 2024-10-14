@@ -1,11 +1,12 @@
 ﻿using Dating.Core.Dtos;
 using Dating.Core.Models;
+using Dating.Core.Models.Pagination;
 
 namespace Dating.API.Services.Interfaces
 {
     public interface IUsersService
     {
-        Task<IEnumerable<MemberDto>> GetAllMemberDtosAsync();
+        Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(PaginationParameters parameters);
         Task<MemberDto?> GetMemberDtoByIdAsync(int id);
         Task<MemberDto?> GetMemberDtoByNameAsync(string userName);
         Task<User?> GetByNameAsync(string userName);
@@ -17,5 +18,6 @@ namespace Dating.API.Services.Interfaces
         Task<bool> AddPhotoToUserAsync(User user, Photo photo);
         Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);
         Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId);
+        Task<bool> UpdateLastActivityDateAsync(int userId);
     }
 }

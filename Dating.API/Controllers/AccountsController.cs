@@ -1,5 +1,6 @@
 ﻿using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
+using Dating.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dating.API.Controllers
@@ -25,12 +26,7 @@ namespace Dating.API.Controllers
 
             return user == null
                 ? BadRequest("User was not registered")
-                : Ok(new UserDto
-                {
-                    UserName = user.UserName,
-                    Token = _tokenService.CreateToken(user),
-                    KnownAs = user.KnownAs
-                });
+                : Ok(CreateUserDto(user));
         }
 
         [HttpPost("login")]
@@ -45,16 +41,23 @@ namespace Dating.API.Controllers
 
             var result = _usersService.CheckIfPasswordValid(user, registerDto.Password);
 
+            if (result) await _usersService.UpdateLastActivityDateAsync(user.Id);
+
             return result
-                ? Ok(
-                    new UserDto
-                    {
-                        UserName = user.UserName,
-                        Token = _tokenService.CreateToken(user),
-                        PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                        KnownAs = user.KnownAs
-                    })
+                ? Ok(CreateUserDto(user))
                 : Unauthorized("Invalid user or password");
+        }
+
+        private UserDto CreateUserDto(User user)
+        {
+            return new UserDto
+            {
+                UserName = user.UserName,
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs,
+                Gender = user.Gender,
+                PhotoUrl = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url
+            };
         }
     }
 }
