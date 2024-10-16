@@ -5,6 +5,7 @@ using Dating.API.Services.CloudinaryService;
 using Dating.API.Services.Interfaces;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
+using Dating.DAL.Repositories.Interfaces;
 using Dating.DAL.Seed;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,7 @@ builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection(
 
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<ILikesRepository, LikesRepository>();
 builder.Services.AddDbContext<DataContext>(opt =>
 {
     opt.UseSqlite(

@@ -2,7 +2,7 @@
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
 
-namespace Dating.DAL.Repositories
+namespace Dating.DAL.Repositories.Interfaces
 {
     public interface IUsersRepository
     {

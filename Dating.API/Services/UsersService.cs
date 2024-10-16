@@ -3,7 +3,7 @@ using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
-using Dating.DAL.Repositories;
+using Dating.DAL.Repositories.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 

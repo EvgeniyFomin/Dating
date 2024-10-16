@@ -4,6 +4,7 @@ using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
 using Dating.DAL.Context;
+using Dating.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dating.DAL.Repositories
