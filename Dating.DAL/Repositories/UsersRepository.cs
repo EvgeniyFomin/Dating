@@ -11,53 +11,50 @@ namespace Dating.DAL.Repositories
 {
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
-        private readonly DataContext _dataContext = dataContext;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dataContext.Users
+            return await dataContext.Users
                 .Include(x => x.Photos)
                 .ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _dataContext.Users
+            return await dataContext.Users
                 .Include(x => x.Photos)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User?> GetByNameAsync(string name)
         {
-            return await _dataContext.Users
+            return await dataContext.Users
                 .Include(x => x.Photos)
                 .SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
         }
 
         public async Task<bool> SaveAllAsync()
         {
-            return await _dataContext.SaveChangesAsync() > 0;
+            return await dataContext.SaveChangesAsync() > 0;
         }
 
         public async Task<User> CreateAsync(User user)
         {
-            var result = await _dataContext.Users.AddAsync(user);
+            var result = await dataContext.Users.AddAsync(user);
 
-            await _dataContext.SaveChangesAsync();
+            await dataContext.SaveChangesAsync();
 
             return result.Entity;
         }
 
         public async Task<bool> IfExists(string userName)
         {
-            return await _dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
+            return await dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
         }
 
         // members
         public async Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters)
         {
-            var query = _dataContext.Users.AsQueryable();
+            var query = dataContext.Users.AsQueryable();
             query = query.Where(x => x.UserName != parameters.CurrentUserName);
 
             if (parameters.Gender != null)
@@ -76,31 +73,31 @@ namespace Dating.DAL.Repositories
                 _ => query.OrderByDescending(x => x.LastActive)
             };
 
-            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider), parameters);
+            return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(mapper.ConfigurationProvider), parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByName(string name)
         {
-            return await _dataContext.Users
+            return await dataContext.Users
                  .Where(x => x.UserName.ToLower() == name.ToLower())
-                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                  .SingleOrDefaultAsync();
         }
 
         public async Task<MemberDto?> GetMemberDtoById(int id)
         {
-            return await _dataContext.Users
-                   .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+            return await dataContext.Users
+                   .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<bool> UpdateLastActiveDateAsync(int id)
         {
-            var user = _dataContext.Users.First(a => a.Id == id);
-            
+            var user = dataContext.Users.First(a => a.Id == id);
+
             user.LastActive = DateTime.UtcNow;
 
-           return await SaveAllAsync();
+            return await SaveAllAsync();
         }
     }
 }
