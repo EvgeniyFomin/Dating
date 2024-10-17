@@ -7,9 +7,9 @@ namespace Dating.DAL.Repositories.Interfaces
     {
         Task<UserLike?> GetLikeAsync(int sourceUserId, int targetUserId);
         Task<IEnumerable<MemberDto>> GetUserLikesAsync(string predicate, int userId);
-        Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int currentUserId);
+        Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int userId);
         Task AddLikeAsync(UserLike userLike);
-        Task RemoveLikeAsync(UserLike userLike);
+        void RemoveLike(UserLike userLike);
         Task<bool> SaveChangesAsync();
     }
 }

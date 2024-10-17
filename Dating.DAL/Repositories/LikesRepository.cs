@@ -13,13 +13,12 @@ namespace Dating.DAL.Repositories
         public async Task AddLikeAsync(UserLike userLike)
         {
             await context.Likes.AddAsync(userLike);
-            await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int currentUserId)
+        public async Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int userId)
         {
             return await context.Likes
-                .Where(x => x.SourceUserId == currentUserId)
+                .Where(x => x.SourceUserId == userId)
                 .Select(x => x.TargetUserId)
                 .ToListAsync();
         }
@@ -58,14 +57,11 @@ namespace Dating.DAL.Repositories
                         .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                         .ToListAsync();
             }
-
-
         }
 
-        public async Task RemoveLikeAsync(UserLike userLike)
+        public void RemoveLike(UserLike userLike)
         {
             context.Likes.Remove(userLike);
-            await context.SaveChangesAsync();
         }
 
         public async Task<bool> SaveChangesAsync()
