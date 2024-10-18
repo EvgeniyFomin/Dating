@@ -27,7 +27,7 @@ namespace Dating.API.Services
             return await userRepository.CreateAsync(user);
         }
 
-        public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(PaginationParameters parameters)
+        public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters)
         {
             return await userRepository.GetMemberDtosAsync(parameters);
         }

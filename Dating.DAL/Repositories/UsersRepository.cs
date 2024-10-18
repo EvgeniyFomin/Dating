@@ -52,7 +52,7 @@ namespace Dating.DAL.Repositories
         }
 
         // members
-        public async Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters)
+        public async Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters)
         {
             var query = dataContext.Users.AsQueryable();
             query = query.Where(x => x.UserName != parameters.CurrentUserName);

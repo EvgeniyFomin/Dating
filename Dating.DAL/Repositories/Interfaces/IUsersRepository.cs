@@ -12,7 +12,7 @@ namespace Dating.DAL.Repositories.Interfaces
         Task<User?> GetByNameAsync(string name);
 
         // Get member Dto 
-        Task<PagedList<MemberDto>> GetMemberDtosAsync(PaginationParameters parameters);
+        Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters);
         Task<MemberDto?> GetMemberDtoById(int id);
         Task<MemberDto?> GetMemberDtoByName(string name);
 

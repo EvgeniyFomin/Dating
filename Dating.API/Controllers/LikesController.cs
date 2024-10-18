@@ -2,6 +2,8 @@
 using Dating.API.Middleware;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
+using Dating.Core.Extensions;
+using Dating.Core.Models.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,9 +34,15 @@ namespace Dating.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes(string predicate)
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes([FromQuery] LikesFilteringParameters parameters)
         {
-            return Ok(await likeService.GetUserLikesAsync(predicate, User.GetUserId()));
+            parameters.UserId = User.GetUserId();
+
+            var resultDto = await likeService.GetUserLikesAsync(parameters);
+
+            Response.AddPaginationHeader(resultDto);
+
+            return Ok(resultDto);
         }
     }
 }

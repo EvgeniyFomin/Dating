@@ -1,6 +1,7 @@
 ﻿using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
+using Dating.Core.Models.Pagination;
 using Dating.DAL.Repositories.Interfaces;
 
 namespace Dating.API.Services
@@ -34,9 +35,9 @@ namespace Dating.API.Services
             return await repository.GetCurrentUserLikeIdsAsync(currentUserId);
         }
 
-        public async Task<IEnumerable<MemberDto>> GetUserLikesAsync(string predicate, int userId)
+        public async Task<PagedList<MemberDto>> GetUserLikesAsync(LikesFilteringParameters parameters)
         {
-            return await repository.GetUserLikesAsync(predicate, userId);
+            return await repository.GetUserLikesAsync(parameters);
         }
     }
 }
