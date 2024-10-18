@@ -1,4 +1,5 @@
 ﻿using Dating.Core.Dtos;
+using Dating.Core.Models.Pagination;
 
 namespace Dating.API.Services.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Dating.API.Services.Interfaces
     {
         Task<bool> LikeToggle(int sourceUserId, int targetUserId);
         Task<IEnumerable<int>> GetUserLikeIdsAsync(int currentUserId);
-        Task<IEnumerable<MemberDto>> GetUserLikesAsync(string predicate, int userId);
+        Task<PagedList<MemberDto>> GetUserLikesAsync(LikesFilteringParameters parameters);
     }
 }
