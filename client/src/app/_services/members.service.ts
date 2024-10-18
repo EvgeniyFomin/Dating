@@ -41,10 +41,6 @@ export class MembersService {
   }
 
   getMemberByName(userName: string) {
-    // const member = this.members().find(x => x.userName.toLowerCase() === userName.toLowerCase());
-
-    // if (member !== undefined) return of(member);
-
     return this.httpClient.get<Member>(this.baseUrl + userName);
   }
 
@@ -54,45 +50,20 @@ export class MembersService {
       .find((m: Member) => m.id.toString() == id);
 
     if (member) return of(member);
-    // const member = this.members().find(x => x.id.toString() === id);
-
-    // if (member !== undefined) return of(member);
 
     return this.httpClient.get<Member>(this.baseUrl + id);
   }
 
   updateMember(member: Member) {
-    return this.httpClient.put(this.baseUrl, member).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(m => m.userName === member.userName ? member : m))
-      // })
-    );
+    return this.httpClient.put(this.baseUrl, member);
   }
 
   setMainPhoto(photo: Photo) {
-    return this.httpClient.put(this.baseUrl + 'set-main-photo/' + photo.id, {}).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(m => {
-      //     if (m.photos.includes(photo)) {
-      //       m.mainPhotoUrl = photo.url
-      //     }
-      //     return m;
-      //   }))
-      // })
-    );
+    return this.httpClient.put(this.baseUrl + 'set-main-photo/' + photo.id, {});
   }
 
   deletePhoto(photo: Photo) {
-    return this.httpClient.delete(this.baseUrl + "delete-photo/" + photo.id).pipe(
-      // tap(() => {
-      //   this.members.update(members => members.map(m => {
-      //     if (m.photos.includes(photo)) {
-      //       m.photos = m.photos.filter(x => x.id !== photo.id)
-      //     }
-      //     return m;
-      //   }));
-      // })
-    );
+    return this.httpClient.delete(this.baseUrl + "delete-photo/" + photo.id);
   }
 
   private setPaginationHeaders(userParams: UserParams) {
