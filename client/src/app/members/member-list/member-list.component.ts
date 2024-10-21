@@ -22,6 +22,7 @@ export class MemberListComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+    this.resetFilters();
     if (!this.membersService.paginatedResult()) this.loadMembers();
   }
 
