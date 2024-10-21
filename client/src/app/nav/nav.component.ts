@@ -1,4 +1,3 @@
-import { HttpInterceptorFn } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
