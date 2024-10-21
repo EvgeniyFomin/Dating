@@ -3,7 +3,7 @@ using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
-using Dating.DAL.Repositories;
+using Dating.DAL.Repositories.Interfaces;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,8 +11,6 @@ namespace Dating.API.Services
 {
     public class UsersService(IUsersRepository userRepository, IMapper mapper) : IUsersService
     {
-        private readonly IUsersRepository _userRepository = userRepository;
-
         public async Task<User> CreateUserAsync(RegisterUserDto userDto)
         {
             var user = mapper.Map<User>(userDto);
@@ -26,32 +24,32 @@ namespace Dating.API.Services
 
         public async Task<User> AddAsync(User user)
         {
-            return await _userRepository.CreateAsync(user);
+            return await userRepository.CreateAsync(user);
         }
 
-        public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(PaginationParameters parameters)
+        public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters)
         {
-            return await _userRepository.GetMemberDtosAsync(parameters);
+            return await userRepository.GetMemberDtosAsync(parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
         {
-            return await _userRepository.GetMemberDtoById(id);
+            return await userRepository.GetMemberDtoById(id);
         }
 
         public async Task<User?> GetByNameAsync(string userName)
         {
-            return await _userRepository.GetByNameAsync(userName);
+            return await userRepository.GetByNameAsync(userName);
         }
 
         public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
         {
-            return await _userRepository.GetMemberDtoByName(userName);
+            return await userRepository.GetMemberDtoByName(userName);
         }
 
         public async Task<bool> CheckIfExistsAsync(string userName)
         {
-            return await _userRepository.IfExists(userName);
+            return await userRepository.IfExists(userName);
         }
 
         public bool CheckIfPasswordValid(User user, string password)
@@ -73,11 +71,11 @@ namespace Dating.API.Services
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)
         {
-            var user = await _userRepository.GetByNameAsync(userName);
+            var user = await userRepository.GetByNameAsync(userName);
 
             mapper.Map(memberDto, user);
 
-            return await _userRepository.SaveAllAsync();
+            return await userRepository.SaveAllAsync();
         }
 
         public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
@@ -87,7 +85,7 @@ namespace Dating.API.Services
 
             user.Photos.Add(photo);
 
-            return await _userRepository.SaveAllAsync();
+            return await userRepository.SaveAllAsync();
         }
 
         public async Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId)
@@ -100,7 +98,7 @@ namespace Dating.API.Services
 
             photo.IsMain = true;
 
-            return await _userRepository.SaveAllAsync();
+            return await userRepository.SaveAllAsync();
         }
 
         public async Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId)
@@ -111,14 +109,14 @@ namespace Dating.API.Services
 
             user.Photos.Remove(photo);
 
-            return await _userRepository.SaveAllAsync()
+            return await userRepository.SaveAllAsync()
                 ? (true, photo.PublicId)
                 : (false, null);
         }
 
         public async Task<bool> UpdateLastActivityDateAsync(int userId)
         {
-            return await _userRepository.UpdateLastActiveDateAsync(userId);
+            return await userRepository.UpdateLastActiveDateAsync(userId);
         }
     }
 }
