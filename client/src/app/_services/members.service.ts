@@ -1,12 +1,13 @@
 import { UserParams } from './../_models/userParams';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { inject, Injectable, model, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Member } from '../_models/member';
 import { Photo } from '../_models/photo';
 import { PaginatedResult } from '../_models/pagination';
 import { of } from 'rxjs';
 import { AccountService } from './account.service';
+import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,23 +20,23 @@ export class MembersService {
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
   memberCache = new Map();
   user = this.accountService.currentUser();
-  userParams = signal<UserParams>(new UserParams(this.user));
+  userParams = signal<UserParams>(new UserParams(this.accountService.currentUser()));
 
   resetUserParams() {
-    this.userParams.set(new UserParams(this.user));
+    this.userParams.set(new UserParams(this.accountService.currentUser()));
   }
 
   getMembers() {
     const response = this.memberCache.get(Object.values(this.userParams()).join('-'));
 
-    if (response) return this.setPaginatedResponse(response);
+    if (response) return setPaginatedResponse(response, this.paginatedResult);
 
     let params = this.setPaginationHeaders(this.userParams());
-
+    console.log('member service: getMembers, member params : ' + JSON.stringify(this.userParams()));
     return this.httpClient.get<Member[]>(this.baseUrl, { observe: 'response', params: params }).subscribe({
       next: response => {
-        this.setPaginatedResponse(response);
-        this.memberCache.set(Object.values(this.userParams()).join('-'), response);
+        setPaginatedResponse(response, this.paginatedResult);
+        this.memberCache.set(Object.values(this.userParams).join('-'), response);
       }
     });
   }
@@ -67,12 +68,8 @@ export class MembersService {
   }
 
   private setPaginationHeaders(userParams: UserParams) {
-    let params = new HttpParams();
 
-    if (userParams.pageNumber && userParams.pageSize) {
-      params = params.append('pageNumber', userParams.pageNumber);
-      params = params.append('pageSize', userParams.pageSize);
-    }
+    let params = setPaginationHeaders(userParams);
 
     params = params.append('minAge', userParams.minAge);
     params = params.append('maxAge', userParams.maxAge);
@@ -80,12 +77,5 @@ export class MembersService {
     params = params.append('orderBy', userParams.orderBy);
 
     return params;
-  }
-
-  private setPaginatedResponse(response: HttpResponse<Member[]>) {
-    this.paginatedResult.set({
-      items: response.body as Member[],
-      pagination: JSON.parse(response.headers.get('Pagination')!)
-    })
   }
 }
