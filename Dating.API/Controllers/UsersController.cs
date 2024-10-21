@@ -19,7 +19,7 @@ namespace Dating.API.Controllers
         private readonly IPhotoService _photoService = photoService;
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] PaginationParameters parameters)
+        public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserFilteringParameters parameters)
         {
             parameters.CurrentUserName = User.GetUserName();
             var resultDto = await _usersService.GetPagedMemberDtosAsync(parameters);

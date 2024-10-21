@@ -6,7 +6,7 @@ namespace Dating.API.Services.Interfaces
 {
     public interface IUsersService
     {
-        Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(PaginationParameters parameters);
+        Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters);
         Task<MemberDto?> GetMemberDtoByIdAsync(int id);
         Task<MemberDto?> GetMemberDtoByNameAsync(string userName);
         Task<User?> GetByNameAsync(string userName);

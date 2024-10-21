@@ -1,6 +1,4 @@
-﻿using Dating.Core.Enums;
-
-namespace Dating.Core.Models.Pagination
+﻿namespace Dating.Core.Models.Pagination
 {
     public class PaginationParameters
     {
@@ -14,14 +12,5 @@ namespace Dating.Core.Models.Pagination
             get => _pageSize;
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
-
-        // --  Filtering stuff --
-        public Gender? Gender { get; set; }
-        public string? CurrentUserName { get; set; }
-        public int MinAge { get; set; } = 18;
-        public int MaxAge { get; set; } = 99;
-
-        // -- Sorting stuff --
-        public string OrderBy { get; set; } = "lastActive";
     }
 }
