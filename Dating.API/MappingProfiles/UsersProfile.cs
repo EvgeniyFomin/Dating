@@ -2,7 +2,6 @@
 using Dating.Core.Dtos;
 using Dating.Core.Extensions;
 using Dating.Core.Models;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Dating.API.MappingProfiles
 {
@@ -11,12 +10,14 @@ namespace Dating.API.MappingProfiles
         public UsersProfile()
         {
             CreateMap<User, MemberDto>()
-                .ForMember(dest => dest.Age, opt =>
-                    opt.MapFrom(src => src.DateOfBirth.GetAge()))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetAge()))
+                .ForMember(dest => dest.MainPhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url));
 
-                .ForMember(dest => dest.MainPhotoUrl, opt =>
-                    opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url));
+            CreateMap<User, MessageUserDto>()
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain)!.Url));
 
+            CreateMap<Message, MessageDto>();
+            CreateMap<CreateMessageDto, MessageDto>();
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, User>();
             CreateMap<RegisterUserDto, User>()

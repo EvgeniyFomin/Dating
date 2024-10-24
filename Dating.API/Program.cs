@@ -21,6 +21,8 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPhotoService, CloudinaryService>();
 builder.Services.AddScoped<ILikesService, LikesService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+
 builder.Services.AddScoped<LogUserActivity>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
@@ -28,6 +30,8 @@ builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection(
 // DAL stuff
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<ILikesRepository, LikesRepository>();
+builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+
 builder.Services.AddDbContext<DataContext>(opt =>
 {
     opt.UseSqlite(
