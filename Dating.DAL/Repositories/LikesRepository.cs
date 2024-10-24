@@ -6,7 +6,6 @@ using Dating.Core.Models.Pagination;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Net.WebSockets;
 
 namespace Dating.DAL.Repositories
 {
