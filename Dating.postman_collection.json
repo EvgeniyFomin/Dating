@@ -1,11 +1,123 @@
 {
 	"info": {
-		"_postman_id": "233f85ad-a2b3-48ff-96da-6d4518485f05",
+		"_postman_id": "c5217eee-03ce-4264-ae54-38c3243670a0",
 		"name": "Dating",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "37777811"
 	},
 	"item": [
+		{
+			"name": "Accounts Controller",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"sixth\",\r\n  \"knownAs\": \"6th element\",\r\n  \"password\": \"passs\",\r\n  \"confirmPassword\": \"passs\",\r\n  \"gender\": \"2\",\r\n  \"dateOfBirth\": \"2006-08-31\",\r\n  \"city\": \"burgas\",\r\n  \"country\": \"bulgaria\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Accounts/register",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Accounts",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Ana",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"ana_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"ana\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Accounts/login",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Ron",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"ron_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"ron\",\r\n  \"password\": \"cat\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Accounts/login",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Users Controller",
 			"item": [
@@ -17,7 +129,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{bearer_token}}",
+									"value": "{{ana_token}}",
 									"type": "string"
 								}
 							]
@@ -69,7 +181,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{bearer_token}}",
+									"value": "{{ana_token}}",
 									"type": "string"
 								}
 							]
@@ -101,7 +213,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{bearer_token}}",
+									"value": "{{ana_token}}",
 									"type": "string"
 								}
 							]
@@ -140,7 +252,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{bearer_token}}",
+									"value": "{{ana_token}}",
 									"type": "string"
 								}
 							]
@@ -172,7 +284,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{bearer_token}}",
+									"value": "{{ana_token}}",
 									"type": "string"
 								}
 							]
@@ -205,56 +317,280 @@
 			]
 		},
 		{
-			"name": "Accounts Controller",
+			"name": "Likes Controller",
 			"item": [
 				{
-					"name": "Register",
+					"name": "Like user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"sixth\",\r\n  \"knownAs\": \"6th element\",\r\n  \"password\": \"passs\",\r\n  \"confirmPassword\": \"passs\",\r\n  \"gender\": \"2\",\r\n  \"dateOfBirth\": \"2006-08-31\",\r\n  \"city\": \"burgas\",\r\n  \"country\": \"bulgaria\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{url_https}}/Accounts/register",
+							"raw": "{{url_https}}/Likes/6",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
-								"Accounts",
-								"register"
+								"Likes",
+								"6"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Login as Ana",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = JSON.parse(pm.response.text());\r",
-									"pm.collectionVariables.set(\"bearer_token\", jsonData.token);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
+					"name": "Get List For Ana",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes/List",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List For Ron",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ron_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes/List",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked Users For Ana",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes?predicate=liked",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes"
+							],
+							"query": [
+								{
+									"key": "predicate",
+									"value": "liked"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked Users For Ron",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ron_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes?predicate=liked",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes"
+							],
+							"query": [
+								{
+									"key": "predicate",
+									"value": "liked"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked By Users For Ana",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes?predicate=likedBy",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes"
+							],
+							"query": [
+								{
+									"key": "predicate",
+									"value": "likedBy"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked By Users For Ron",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ron_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes?predicate=likedBy",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes"
+							],
+							"query": [
+								{
+									"key": "predicate",
+									"value": "likedBy"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked mutual",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url_https}}/Likes?predicate=mutual",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Likes"
+							],
+							"query": [
+								{
+									"key": "predicate",
+									"value": "mutual"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages Controller",
+			"item": [
+				{
+					"name": "Add Message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearer_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"ana\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
+							"raw": "{\r\n  \"recipientId\": 11,\r\n  \"content\": \"The third on is the ideal - way better than the first and second ones\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -262,13 +598,200 @@
 							}
 						},
 						"url": {
-							"raw": "{{url_https}}/Accounts/login",
+							"raw": "{{url_https}}/Messages",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
-								"Accounts",
-								"login"
+								"Messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ron's Incoming Messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ron_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Messages?Container=1&PageNumber=1&PageSize=2",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Messages"
+							],
+							"query": [
+								{
+									"key": "Container",
+									"value": "1"
+								},
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ana's Outgoing Messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Messages?Container=2&PageNumber=1&PageSize=2",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Messages"
+							],
+							"query": [
+								{
+									"key": "Container",
+									"value": "2"
+								},
+								{
+									"key": "PageNumber",
+									"value": "1"
+								},
+								{
+									"key": "PageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ron's to Ana Thread Messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ron_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Messages/thread/4",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Messages",
+								"thread",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ana 's to Ron Thread Messages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Messages/thread/11",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Messages",
+								"thread",
+								"11"
 							]
 						}
 					},
@@ -306,9 +829,12 @@
 			"type": "string"
 		},
 		{
-			"key": "bearer_token",
-			"value": "",
-			"type": "string"
+			"key": "ron_token",
+			"value": ""
+		},
+		{
+			"key": "ana_token",
+			"value": ""
 		}
 	]
 }

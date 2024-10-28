@@ -18,8 +18,12 @@ namespace Dating.Core.Models
         public string? LookingFor { get; set; }
         public required string City { get; set; }
         public required string Country { get; set; }
+
+        // navigation properties
         public List<Photo> Photos { get; set; } = [];
         public List<UserLike> LikedByUsers { get; set; } = [];
         public List<UserLike> LikedUsers { get; set; } = [];
+        public List<Message> MessagesSent { get; set; } = [];
+        public List<Message> MessagesReceived { get; set; } = [];
     }
 }
