@@ -29,7 +29,7 @@
     </div>
 </div>
 
-@if(!messagesService.paginatedResult()?.items){
+@if(!messagesService.paginatedResult()?.items?.length){
     <h3>There are not messages yet</h3>
 }@else{
     <table class="table table-hover mt-3" style="cursor: pointer;">
@@ -68,21 +68,21 @@
             }
         </tbody>
     </table>
+    @if(messagesService.paginatedResult()?.pagination){
+        <div class="d-flex justify-content-center">
+            <pagination 
+                [boundaryLinks]="true"
+                [totalItems]="messagesService.paginatedResult()?.pagination!.totalItems"
+                [itemsPerPage]="messagesService.paginatedResult()?.pagination!.itemsPerPage"
+                [maxSize]="10"
+                (pageChanged)="pageChanged($event)"
+                [(ngModel)]="messagesService.paginatedResult()?.pagination!.currentPage"
+                previousText="&lsaquo;" 
+                nextText="&rsaquo;"
+                firstText="&laquo;"
+                lastText="&raquo;">
+            </pagination>
+        </div>
+    }
 }
 
-@if(messagesService.paginatedResult()?.pagination){
-    <div class="d-flex justify-content-center">
-        <pagination 
-            [boundaryLinks]="true"
-            [totalItems]="messagesService.paginatedResult()?.pagination!.totalItems"
-            [itemsPerPage]="messagesService.paginatedResult()?.pagination!.itemsPerPage"
-            [maxSize]="10"
-            (pageChanged)="pageChanged($event)"
-            [(ngModel)]="messagesService.paginatedResult()?.pagination!.currentPage"
-            previousText="&lsaquo;" 
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;">
-        </pagination>
-    </div>
-}

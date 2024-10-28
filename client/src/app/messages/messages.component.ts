@@ -23,10 +23,6 @@ export class MessagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMessages();
-
-    this.messagesService.getThread(4).subscribe({
-      next: messages => this.thread = messages
-    });
   }
 
   loadMessages() {
