@@ -17,7 +17,7 @@ namespace Dating.DAL.Repositories
             await context.Messages.AddAsync(message);
         }
 
-        public void DeleteAsync(Message message)
+        public void Delete(Message message)
         {
             context.Messages.Remove(message);
         }
@@ -35,9 +35,9 @@ namespace Dating.DAL.Repositories
 
             query = parameters.Container switch
             {
-                Container.Inbox => query.Where(m => m.RecipientId == parameters.UserId),
-                Container.Outbox => query.Where(m => m.SenderId == parameters.UserId),
-                _ => query.Where(m => m.RecipientId == parameters.UserId && m.ReadDate == null)
+                Container.Inbox => query.Where(m => m.RecipientId == parameters.UserId && m.RecipientDeleted == false),
+                Container.Outbox => query.Where(m => m.SenderId == parameters.UserId && m.SenderDeleted == false),
+                _ => query.Where(m => m.RecipientId == parameters.UserId && m.ReadDate == null && m.RecipientDeleted == false)
             };
 
             return await PagedList<MessageDto>.CreateAsync(
@@ -49,8 +49,13 @@ namespace Dating.DAL.Repositories
         {
             var query = context.Messages
                 .Where(x =>
-                    x.SenderId == currentUserId && x.RecipientId == recipientId ||
-                    x.SenderId == recipientId && x.RecipientId == currentUserId)
+                    x.SenderId == currentUserId
+                        && x.SenderDeleted == false
+                        && x.RecipientId == recipientId ||
+                    x.SenderId == recipientId
+                        && x.RecipientDeleted == false
+                        && x.RecipientId == currentUserId
+                )
                 .OrderBy(x => x.SentDate);
 
             await MarkAllUnreadAsRead(query, currentUserId);

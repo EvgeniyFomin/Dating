@@ -23,8 +23,8 @@ namespace Dating.API.Controllers
 
             var result = await messageService.AddMessageAsync(currentUserId, message);
 
-            return result == null ?
-                BadRequest("Cannot send the message")
+            return result == null
+                ? BadRequest("Cannot send the message")
                 : Ok(result);
         }
 
@@ -46,9 +46,17 @@ namespace Dating.API.Controllers
         {
             var messages = await messageService.GetThreadAsync(User.GetUserId(), id);
 
-            return messages == null 
-                ? NotFound("There are not messages between these users") 
+            return messages == null
+                ? NotFound("There are not messages between these users")
                 : Ok(messages);
+        }
+
+        [HttpDelete("{messageId}")]
+        public async Task<ActionResult> DeleteMessage(int messageId)
+        {
+            return await messageService.Delete(messageId, User.GetUserId())
+                ? Ok()
+                : BadRequest("message was not deleted");
         }
     }
 }

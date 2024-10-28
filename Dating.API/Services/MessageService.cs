@@ -36,6 +36,22 @@ namespace Dating.API.Services
 
         }
 
+        public async Task<bool> Delete(int messageId, int userId)
+        {
+            var message = await messageRepository.GetByIdAsync(messageId);
+            if (message == null) return false;
+
+            if (message.RecipientId != userId || message.SenderId != userId) return false;
+
+            if (message.SenderId == userId) message.SenderDeleted = true;
+            if (message.RecipientId == userId) message.RecipientDeleted = true;
+
+            if (message is { SenderDeleted: true, RecipientDeleted: true }) messageRepository.Delete(message);
+
+            return await messageRepository.SaveAllAsync();
+
+        }
+
         public async Task<PagedList<MessageDto>> GetMessagesForUserAsync(MessageParameters parameters)
         {
             return await messageRepository.GetMessageDtosAsync(parameters);

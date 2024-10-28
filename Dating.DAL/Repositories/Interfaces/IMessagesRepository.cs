@@ -7,7 +7,7 @@ namespace Dating.DAL.Repositories.Interfaces
     public interface IMessagesRepository
     {
         Task AddAsync(Message message);
-        void DeleteAsync(Message message);
+        void Delete(Message message);
         Task<Message?> GetByIdAsync(int id);
         Task<PagedList<MessageDto>> GetMessageDtosAsync(MessageParameters parameters);
         Task<IEnumerable<MessageDto>> GetThreadAsync(int currentUserId, int recipientId);
