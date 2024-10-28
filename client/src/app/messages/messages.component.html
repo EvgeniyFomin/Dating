@@ -3,7 +3,7 @@
         <div class="btn-group">
             <button 
                 class="btn btn-primary" 
-                btnRadio="0" 
+                [btnRadio]="container().unread"
                 [(ngModel)]="parameters.container"
                 (click)="loadMessages()"
                 >
@@ -11,7 +11,7 @@
                 </button>
             <button
                 class="btn btn-primary"
-                btnRadio="1"
+                [btnRadio]="container().inbox"
                 [(ngModel)]="parameters.container"
                 (click)="loadMessages()"
                 >
@@ -19,7 +19,7 @@
                 </button>
             <button
                 class="btn btn-primary"
-                btnRadio="2"
+                [btnRadio]="container().outbox"
                 [(ngModel)]="parameters.container"
                 (click)="loadMessages()"
                 >
@@ -47,14 +47,14 @@
                     <td>{{message.content}}</td>
                     <td>
                         <div>
-                            <img [src]="parameters.container === '2'
+                            <img [src]="isOutbox
                                 ?(message.recipient.photoUrl || './user.png')
                                 :(message.sender.photoUrl || './user.png')"
-                                [alt]="parameters.container === '2'?(message.recipient.userName):(message.sender.userName)"
+                                alt='image of user'
                                 class="rounded-circle me-2"
                             >
                             <strong>
-                                {{parameters.container === '2'?(message.recipient.userName):(message.sender.userName)}}
+                                {{isOutbox ? message.recipient.userName : message.sender.userName}}
                             </strong>
                         </div>
                     </td>

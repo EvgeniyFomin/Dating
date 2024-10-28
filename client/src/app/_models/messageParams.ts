@@ -1,9 +1,10 @@
+import { Container } from "../_enums/container";
 import { PagingParams } from "./pagingParams";
 
 export class MessageParams extends PagingParams {
-    container: string = '0'
+    container: Container;
 
-    constructor(container: string) {
+    constructor(container: Container) {
         super(1, 5);
         this.container = container;
     }

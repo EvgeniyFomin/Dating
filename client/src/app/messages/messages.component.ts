@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TimeagoModule } from 'ngx-timeago';
 import { RouterLink } from '@angular/router';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { Container } from '../_enums/container';
 
 @Component({
   selector: 'app-messages',
@@ -18,8 +19,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 export class MessagesComponent implements OnInit {
   messagesService = inject(MessagesService);
-  thread: Message[] = [];
-  parameters: MessageParams = new MessageParams('1');
+  parameters: MessageParams = new MessageParams(Container.inbox);
+  isOutbox = this.parameters.container === Container.outbox;
 
   ngOnInit(): void {
     this.loadMessages();
@@ -37,7 +38,11 @@ export class MessagesComponent implements OnInit {
   }
 
   getRoute(message: Message) {
-    if (this.parameters.container === '2') return `/members/${message.recipient.id}`
+    if (this.parameters.container === Container.outbox) return `/members/${message.recipient.id}`
     else return `/members/${message.sender.id}`
+  }
+
+  container(){
+    return Container;
   }
 }
