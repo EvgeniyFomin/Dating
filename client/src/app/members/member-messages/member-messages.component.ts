@@ -14,15 +14,10 @@ import { Message } from '../../_models/message';
 export class MemberMessagesComponent implements OnInit {
   messagesService = inject(MessagesService);
   userId = input.required<number>();
-  messages: Message[] = [];
+  messages = input.required<Message[]>();
 
   ngOnInit(): void {
-    this.loadMessages();
+
   }
 
-  loadMessages() {
-    this.messagesService.getThread(this.userId()).subscribe({
-      next: messages => this.messages = messages
-    })
-  }
 }
