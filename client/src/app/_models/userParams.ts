@@ -10,7 +10,6 @@ export class UserParams extends PagingParams {
 
     constructor(user: User | null) {
         super(1, 5);
-        console.log('user in constructor of params: ' + JSON.stringify(user));
         this.gender = this.getGenderFilter(user?.gender)
     }
 
