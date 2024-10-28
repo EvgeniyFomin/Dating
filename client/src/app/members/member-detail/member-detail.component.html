@@ -46,7 +46,12 @@
                 }
             </tab>
             <tab heading="Messages" (selectTab)="onTabActivated($event)">
-                <app-member-messages [userId]="member.id" [messages]="messages"></app-member-messages>
+                <app-member-messages 
+                    [userId]="member.id"
+                    [messages]="messages"
+                    (updateMessages)="onUpdateMessages($event)"
+                >
+                </app-member-messages>
             </tab>
         </tabset>
     </div>

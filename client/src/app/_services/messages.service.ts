@@ -26,4 +26,8 @@ export class MessagesService {
       next: response => setPaginatedResponse(response, this.paginatedResult)
     });
   }
+
+  sendMessage(recepientId: number, content: string) {
+    return this.httpClient.post<Message>(this.baseUrl, { recipientId: recepientId, content: content });
+  }
 }
