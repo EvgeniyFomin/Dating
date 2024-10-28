@@ -11,11 +11,11 @@ import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 })
 export class MessagesService {
   private httpClient = inject(HttpClient);
-  baseUrl = environment.apiUrl + 'messages';
+  baseUrl = environment.apiUrl + 'messages/';
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
 
   getThread(id: number) {
-    return this.httpClient.get<Message[]>(this.baseUrl + '/thread/' + id);
+    return this.httpClient.get<Message[]>(this.baseUrl + 'thread/' + id);
   }
 
   getMessages(parameters: MessageParams) {
@@ -29,5 +29,9 @@ export class MessagesService {
 
   sendMessage(recepientId: number, content: string) {
     return this.httpClient.post<Message>(this.baseUrl, { recipientId: recepientId, content: content });
+  }
+
+  deleteMessage(messageId: number) {
+    return this.httpClient.delete(this.baseUrl + messageId);
   }
 }

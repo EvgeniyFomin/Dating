@@ -42,7 +42,18 @@ export class MessagesComponent implements OnInit {
     else return `/members/${message.sender.id}`
   }
 
-  container(){
+  container() {
     return Container;
+  }
+
+  deleteMessage(messageId: number) {
+    this.messagesService.deleteMessage(messageId).subscribe({
+      next: _ => this.messagesService.paginatedResult.update(prev => {
+        if (prev && prev.items) {
+          prev.items.splice(prev.items.findIndex(m => m.id === messageId), 1);
+        }
+        return prev;
+      })
+    });
   }
 }
