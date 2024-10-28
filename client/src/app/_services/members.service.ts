@@ -32,7 +32,7 @@ export class MembersService {
     if (response) return setPaginatedResponse(response, this.paginatedResult);
 
     let params = this.setPaginationHeaders(this.userParams());
-    console.log('member service: getMembers, member params : ' + JSON.stringify(this.userParams()));
+
     return this.httpClient.get<Member[]>(this.baseUrl, { observe: 'response', params: params }).subscribe({
       next: response => {
         setPaginatedResponse(response, this.paginatedResult);
