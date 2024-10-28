@@ -30,7 +30,7 @@
 </div>
 
 @if(!messagesService.paginatedResult()?.items?.length){
-    <h3>There are not messages yet</h3>
+    <h3 class="mt-5">There are not messages yet</h3>
 }@else{
     <table class="table table-hover mt-3" style="cursor: pointer;">
         <thead>
@@ -43,7 +43,7 @@
         </thead>
         <tbody class="align-middle">
             @for (message of messagesService.paginatedResult()?.items; track message.id) {
-               <tr routerLink="{{getRoute(message)}}">
+               <tr routerLink="{{getRoute(message)}}" [queryParams]="{tab: 'messages'}">
                     <td>{{message.content}}</td>
                     <td>
                         <div>

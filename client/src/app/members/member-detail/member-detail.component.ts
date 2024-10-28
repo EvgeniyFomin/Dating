@@ -1,6 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
-import { MembersService } from '../../_services/members.service';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
@@ -19,36 +18,32 @@ import { MessagesService } from '../../_services/messages.service';
 })
 
 export class MemberDetailComponent implements OnInit {
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
-  private memberService = inject(MembersService);
-  private routes = inject(ActivatedRoute);
+  @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
+  private route = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
-  member?: Member;
+  member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
   messages: Message[] = [];
 
   ngOnInit(): void {
-    this.loadMember();
-  }
+    this.route.data.subscribe({
+      next: data => {
+        this.member = data['member'];
+        this.member && this.member.photos.map(p => {
+          this.images.push(new ImageItem({
+            src: p.url,
+            thumb: p.url
+          }))
+        })
+      }
+    })
 
-  loadMember() {
-    const id = this.routes.snapshot.paramMap.get('id');
-    if (id) {
-      this.memberService.getMemberById(id).subscribe(
-        {
-          next: member => {
-            this.member = member;
-            member.photos.map(p => {
-              this.images.push(new ImageItem({
-                src: p.url,
-                thumb: p.url
-              }))
-            })
-          }
-        }
-      );
-    }
+    this.route.queryParams.subscribe({
+      next: params => {
+        params['tab'] && this.selectTab(params['tab'])
+      }
+    })
   }
 
   onTabActivated(data: TabDirective) {
@@ -57,6 +52,15 @@ export class MemberDetailComponent implements OnInit {
       this.messagesService.getThread(this.member.id).subscribe({
         next: messages => this.messages = messages
       })
+    }
+  }
+
+  selectTab(tabHeading: string) {
+    if (this.memberTabs) {
+      const tab = this.memberTabs.tabs.find(x => x.heading?.toLocaleLowerCase() === tabHeading.toLocaleLowerCase());
+      if (tab) {
+        tab.active = true;
+      }
     }
   }
 }
