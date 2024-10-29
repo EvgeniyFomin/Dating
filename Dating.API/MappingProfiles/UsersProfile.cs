@@ -21,8 +21,7 @@ namespace Dating.API.MappingProfiles
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, User>();
             CreateMap<RegisterUserDto, User>()
-                .ForMember(dest => dest.Password, opt => opt.Ignore())
-                .ForMember(dest => dest.PasswordSalt, opt => opt.Ignore())
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(dest => MapToDateOnlyFromString(dest.DateOfBirth)));
 
             CreateMap<string, DateOnly>().ConvertUsing(s => DateOnly.Parse(s));

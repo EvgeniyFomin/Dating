@@ -4,8 +4,6 @@ using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
 using Dating.DAL.Repositories.Interfaces;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Dating.API.Services
 {
@@ -14,10 +12,6 @@ namespace Dating.API.Services
         public async Task<User> CreateUserAsync(RegisterUserDto userDto)
         {
             var user = mapper.Map<User>(userDto);
-
-            using var hmac = new HMACSHA512();
-            user.Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password!));
-            user.PasswordSalt = hmac.Key;
 
             return await AddAsync(user);
         }
@@ -54,19 +48,7 @@ namespace Dating.API.Services
 
         public bool CheckIfPasswordValid(User user, string password)
         {
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != user.Password[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)

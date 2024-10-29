@@ -1,13 +1,11 @@
 ﻿using Dating.Core.Enums;
+using Dating.Core.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Dating.Core.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public required string UserName { get; set; }
-        public byte[] Password { get; set; } = [];
-        public byte[] PasswordSalt { get; set; } = [];
         public Gender Gender { get; set; }
         public DateOnly DateOfBirth { get; set; }
         public required string KnownAs { get; set; }
@@ -18,6 +16,7 @@ namespace Dating.Core.Models
         public string? LookingFor { get; set; }
         public required string City { get; set; }
         public required string Country { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; } = [];
 
         // navigation properties
         public List<Photo> Photos { get; set; } = [];

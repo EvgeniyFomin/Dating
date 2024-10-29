@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Dating.Core.Models;
+using Dating.DAL.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Role = Dating.Core.Models.Identity.Role;
 
 namespace Dating.API.Extensions
 {
@@ -8,6 +12,15 @@ namespace Dating.API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddIdentityCore<User>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+
+            })
+                .AddRoles<Role>()
+                .AddRoleManager<RoleManager<Role>>()
+                .AddEntityFrameworkStores<DataContext>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {

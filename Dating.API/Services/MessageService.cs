@@ -12,10 +12,10 @@ namespace Dating.API.Services
         public async Task<MessageDto?> AddMessageAsync(int senderId, CreateMessageDto messageDto)
         {
             var recipient = await userRepository.GetByIdAsync(messageDto.RecipientId);
-            if (recipient == null) return null;
+            if (recipient == null || recipient.UserName == null) return null;
 
             var sender = await userRepository.GetByIdAsync(senderId);
-            if (sender == null) return null;
+            if (sender == null || sender.UserName == null) return null;
 
             var message = new Message
             {

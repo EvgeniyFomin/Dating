@@ -29,7 +29,7 @@ namespace Dating.DAL.Repositories
         {
             return await dataContext.Users
                 .Include(x => x.Photos)
-                .SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+                .SingleOrDefaultAsync(x => x.NormalizedUserName == name.ToUpper());
         }
 
         public async Task<bool> SaveAllAsync()
@@ -48,7 +48,7 @@ namespace Dating.DAL.Repositories
 
         public async Task<bool> IfExists(string userName)
         {
-            return await dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
+            return await dataContext.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
         }
 
         // members
@@ -79,7 +79,7 @@ namespace Dating.DAL.Repositories
         public async Task<MemberDto?> GetMemberDtoByName(string name)
         {
             return await dataContext.Users
-                 .Where(x => x.UserName.ToLower() == name.ToLower())
+                 .Where(x => x.NormalizedUserName == name.ToUpper())
                  .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                  .SingleOrDefaultAsync();
         }

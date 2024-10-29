@@ -1,11 +1,14 @@
 ﻿using Dating.Core.Models;
+using Dating.Core.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dating.DAL.Context
 {
-    public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
+    public class DataContext(DbContextOptions<DataContext> options) : IdentityDbContext<User, Role, int,
+        IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
     {
-        public DbSet<User> Users { get; set; }
         public DbSet<UserLike> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
 
@@ -37,6 +40,19 @@ namespace Dating.DAL.Context
                 .HasOne(s => s.Sender)
                 .WithMany(m => m.MessagesSent)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // identity stuff
+            modelBuilder.Entity<User>()
+                .HasMany(ur => ur.UserRoles)
+                .WithOne(u => u.User)
+                .HasForeignKey(ui => ui.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .HasMany(u => u.UserRoles)
+                .WithOne(ur => ur.Role)
+                .HasForeignKey(ui => ui.RoleId)
+                .IsRequired();
         }
     }
 }

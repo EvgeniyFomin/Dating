@@ -5,24 +5,24 @@
 namespace Dating.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateUserEntityTypoFix : Migration
+    public partial class RenamePasswordHash : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "Passwordalt",
+                name: "Password",
                 table: "Users",
-                newName: "PasswordSalt");
+                newName: "PasswordHash");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "PasswordSalt",
+                name: "PasswordHash",
                 table: "Users",
-                newName: "Passwordalt");
+                newName: "Password");
         }
     }
 }

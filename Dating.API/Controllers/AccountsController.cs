@@ -24,7 +24,7 @@ namespace Dating.API.Controllers
 
             var user = await _usersService.CreateUserAsync(registerDto);
 
-            return user == null
+            return user == null || user.UserName == null
                 ? BadRequest("User was not registered")
                 : Ok(CreateUserDto(user));
         }
@@ -34,7 +34,7 @@ namespace Dating.API.Controllers
         {
             var user = await _usersService.GetByNameAsync(registerDto.UserName);
 
-            if (user == null)
+            if (user == null || user.UserName == null)
             {
                 return NotFound($"User {registerDto.UserName} not foud in the system");
             }
@@ -52,7 +52,7 @@ namespace Dating.API.Controllers
         {
             return new UserDto
             {
-                UserName = user.UserName,
+                UserName = user.UserName!,
                 Token = _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
                 Gender = user.Gender,
