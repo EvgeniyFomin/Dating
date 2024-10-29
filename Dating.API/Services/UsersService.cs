@@ -4,16 +4,19 @@ using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
 using Dating.DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dating.API.Services
 {
-    public class UsersService(IUsersRepository userRepository, IMapper mapper) : IUsersService
+    // TODO - separate account's stuff and user's stuff
+    public class UsersService(UserManager<User> userManager, IMapper mapper, IUsersRepository userRepository) : IUsersService
     {
-        public async Task<User> CreateUserAsync(RegisterUserDto userDto)
+        public async Task<(IdentityResult, User)> CreateUserAsync(RegisterUserDto userDto)
         {
             var user = mapper.Map<User>(userDto);
 
-            return await AddAsync(user);
+            return (await userManager.CreateAsync(user, userDto.Password), user);
         }
 
         public async Task<User> AddAsync(User user)
@@ -33,7 +36,9 @@ namespace Dating.API.Services
 
         public async Task<User?> GetByNameAsync(string userName)
         {
-            return await userRepository.GetByNameAsync(userName);
+            return await userManager.Users
+                .Include(p => p.Photos)
+                .FirstOrDefaultAsync(u => u.NormalizedUserName == userName.ToUpper());
         }
 
         public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
@@ -43,12 +48,12 @@ namespace Dating.API.Services
 
         public async Task<bool> CheckIfExistsAsync(string userName)
         {
-            return await userRepository.IfExists(userName);
+            return await userManager.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
         }
 
-        public bool CheckIfPasswordValid(User user, string password)
+        public async Task<bool> CheckIfPasswordValid(User user, string password)
         {
-            throw new NotImplementedException();
+            return await userManager.CheckPasswordAsync(user, password);
         }
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)

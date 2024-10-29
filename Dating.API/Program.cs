@@ -4,6 +4,7 @@ using Dating.API.Services;
 using Dating.API.Services.CloudinaryService;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Models;
+using Dating.Core.Models.Identity;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
 using Dating.DAL.Repositories.Interfaces;
@@ -72,8 +73,9 @@ try
 {
     var context = services.GetRequiredService<DataContext>();
     var userManager = services.GetRequiredService<UserManager<User>>();
+    var roleManager = services.GetRequiredService<RoleManager<Role>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedUsers(userManager);
+    await Seed.SeedUsers(userManager, roleManager);
 }
 catch (Exception ex)
 {

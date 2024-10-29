@@ -22,11 +22,11 @@ namespace Dating.API.Controllers
                 return BadRequest($"User {registerDto.UserName} already exists");
             }
 
-            var user = await _usersService.CreateUserAsync(registerDto);
+            var (result, user) = await _usersService.CreateUserAsync(registerDto);
 
-            return user == null || user.UserName == null
-                ? BadRequest("User was not registered")
-                : Ok(CreateUserDto(user));
+            return result.Succeeded
+                ? Ok(CreateUserDto(user))
+                : BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
@@ -39,7 +39,7 @@ namespace Dating.API.Controllers
                 return NotFound($"User {registerDto.UserName} not foud in the system");
             }
 
-            var result = _usersService.CheckIfPasswordValid(user, registerDto.Password);
+            var result = await _usersService.CheckIfPasswordValid(user, registerDto.Password);
 
             if (result) await _usersService.UpdateLastActivityDateAsync(user.Id);
 

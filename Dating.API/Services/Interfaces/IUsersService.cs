@@ -1,19 +1,21 @@
 ﻿using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Dating.Core.Models.Pagination;
+using Microsoft.AspNetCore.Identity;
 
 namespace Dating.API.Services.Interfaces
 {
     public interface IUsersService
     {
+        // TODO - separate account's stuff and user's stuff
         Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters);
         Task<MemberDto?> GetMemberDtoByIdAsync(int id);
         Task<MemberDto?> GetMemberDtoByNameAsync(string userName);
         Task<User?> GetByNameAsync(string userName);
         Task<User> AddAsync(User user);
         Task<bool> CheckIfExistsAsync(string userName);
-        Task<User> CreateUserAsync(RegisterUserDto userDto);
-        bool CheckIfPasswordValid(User user, string password);
+        Task<(IdentityResult, User)> CreateUserAsync(RegisterUserDto userDto);
+        Task<bool> CheckIfPasswordValid(User user, string password);
         Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName);
         Task<bool> AddPhotoToUserAsync(User user, Photo photo);
         Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);

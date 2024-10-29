@@ -4,6 +4,7 @@ using Dating.Core.Models.Pagination;
 
 namespace Dating.DAL.Repositories.Interfaces
 {
+    // TODO - separate account's stuff and user's stuff
     public interface IUsersRepository
     {
         // Get user

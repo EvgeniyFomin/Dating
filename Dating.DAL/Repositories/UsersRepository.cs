@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dating.DAL.Repositories
 {
+    // TODO - separate account's stuff and user's stuff
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
         public async Task<IEnumerable<User>> GetAllAsync()
