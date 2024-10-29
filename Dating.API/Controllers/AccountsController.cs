@@ -36,7 +36,7 @@ namespace Dating.API.Controllers
 
             if (user == null || user.UserName == null)
             {
-                return NotFound($"User {registerDto.UserName} not foud in the system");
+                return NotFound($"User {registerDto.UserName} not found in the system");
             }
 
             var result = await _usersService.CheckIfPasswordValid(user, registerDto.Password);
@@ -44,16 +44,16 @@ namespace Dating.API.Controllers
             if (result) await _usersService.UpdateLastActivityDateAsync(user.Id);
 
             return result
-                ? Ok(CreateUserDto(user))
+                ? Ok(await CreateUserDto(user))
                 : Unauthorized("Invalid user or password");
         }
 
-        private UserDto CreateUserDto(User user)
+        private async Task<UserDto> CreateUserDto(User user)
         {
             return new UserDto
             {
                 UserName = user.UserName!,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,
                 Gender = user.Gender,
                 PhotoUrl = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url
