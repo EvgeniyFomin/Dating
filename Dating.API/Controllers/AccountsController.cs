@@ -8,21 +8,20 @@ namespace Dating.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class AccountsController(
-        IUsersService usersService,
+        IAccountService accountService,
         ITokenService tokenService) : ControllerBase
     {
-        private readonly IUsersService _usersService = usersService;
         private readonly ITokenService _tokenService = tokenService;
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserDto registerDto)
         {
-            if (await _usersService.CheckIfExistsAsync(registerDto.UserName))
+            if (await accountService.CheckIfExistsAsync(registerDto.UserName))
             {
                 return BadRequest($"User {registerDto.UserName} already exists");
             }
 
-            var (result, user) = await _usersService.CreateUserAsync(registerDto);
+            var (result, user) = await accountService.CreateAccountAsync(registerDto);
 
             return result.Succeeded
                 ? Ok(CreateUserDto(user))
@@ -32,16 +31,16 @@ namespace Dating.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginUserDto registerDto)
         {
-            var user = await _usersService.GetByNameAsync(registerDto.UserName);
+            var user = await accountService.GetByNameAsync(registerDto.UserName);
 
             if (user == null || user.UserName == null)
             {
                 return NotFound($"User {registerDto.UserName} not found in the system");
             }
 
-            var result = await _usersService.CheckIfPasswordValid(user, registerDto.Password);
+            var result = await accountService.CheckIfPasswordValid(user, registerDto.Password);
 
-            if (result) await _usersService.UpdateLastActivityDateAsync(user.Id);
+            if (result) await accountService.UpdateLastActivityDateAsync(user.Id);
 
             return result
                 ? Ok(await CreateUserDto(user))

@@ -4,22 +4,15 @@ using Dating.Core.Models.Pagination;
 
 namespace Dating.DAL.Repositories.Interfaces
 {
-    // TODO - separate account's stuff and user's stuff
     public interface IUsersRepository
     {
-        // Get user
-        Task<IEnumerable<User>> GetAllAsync();
         Task<User?> GetByIdAsync(int id);
         Task<User?> GetByNameAsync(string name);
-
-        // Get member Dto 
+        Task<bool> SaveAllAsync();
+        
+        // member
         Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters);
         Task<MemberDto?> GetMemberDtoById(int id);
         Task<MemberDto?> GetMemberDtoByName(string name);
-
-        Task<User> CreateAsync(User user);
-        Task<bool> IfExists(string userName);
-        Task<bool> UpdateLastActiveDateAsync(int id);
-        Task<bool> SaveAllAsync();
     }
 }

@@ -9,16 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dating.DAL.Repositories
 {
-    // TODO - separate account's stuff and user's stuff
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await dataContext.Users
-                .Include(x => x.Photos)
-                .ToListAsync();
-        }
-
         public async Task<User?> GetByIdAsync(int id)
         {
             return await dataContext.Users
@@ -36,20 +28,6 @@ namespace Dating.DAL.Repositories
         public async Task<bool> SaveAllAsync()
         {
             return await dataContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<User> CreateAsync(User user)
-        {
-            var result = await dataContext.Users.AddAsync(user);
-
-            await dataContext.SaveChangesAsync();
-
-            return result.Entity;
-        }
-
-        public async Task<bool> IfExists(string userName)
-        {
-            return await dataContext.Users.AnyAsync(x => x.NormalizedUserName == userName.ToUpper());
         }
 
         // members
@@ -90,15 +68,6 @@ namespace Dating.DAL.Repositories
             return await dataContext.Users
                    .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<bool> UpdateLastActiveDateAsync(int id)
-        {
-            var user = dataContext.Users.First(a => a.Id == id);
-
-            user.LastActive = DateTime.UtcNow;
-
-            return await SaveAllAsync();
         }
     }
 }
