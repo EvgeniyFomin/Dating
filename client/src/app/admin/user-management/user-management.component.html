@@ -9,15 +9,15 @@
         </thead>
         <tbody>
             @for (user of users; track user.id){
-                <tr>
-                    <td>{{user.userName}}</td>
-                    <td>{{user.roles}}</td>
-                    <td>
-                        <button class="btn btn-info" (click)="editUser(user.id)">
-                            <i class="fa fa-edit"> Edit roles</i>
-                        </button>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{user.userName}}</td>
+                <td>{{user.roles}}</td>
+                <td>
+                    <button class="btn btn-info" (click)="openRolesModal(user.roles)">
+                        <i class="fa fa-edit"> Edit roles</i>
+                    </button>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
