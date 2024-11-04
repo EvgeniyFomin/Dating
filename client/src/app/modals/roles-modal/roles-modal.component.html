@@ -14,7 +14,8 @@
                 value="role"
                 (change)="updateChecked(role)"
                 [disabled]="role === 'Admin' && user.userName === 'admin' "
-            >{{role}}
+            >
+            <label>{{role}}</label>
         </div>
     }
 </div>
