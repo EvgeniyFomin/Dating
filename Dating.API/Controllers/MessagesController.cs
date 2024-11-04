@@ -1,5 +1,4 @@
-﻿using Dating.API.Extensions;
-using Dating.API.Middleware;
+﻿using Dating.API.Middleware;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Dtos;
 using Dating.Core.Extensions;
