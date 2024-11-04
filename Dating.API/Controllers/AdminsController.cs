@@ -26,14 +26,14 @@ namespace Dating.API.Controllers
         }
 
         [Authorize(Policy = "RequireAdminRole")]
-        [HttpPost("edit-user-roles/{userName}")]
-        public async Task<ActionResult> EditRoles(string userName, string roles)
+        [HttpPost("edit-user-roles/{userId}")]
+        public async Task<ActionResult> EditRoles(string userId, string roles)
         {
             if (string.IsNullOrEmpty(roles)) return BadRequest("You must select at least one role");
 
             var selectedRoles = roles.Split(",").ToArray();
 
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await userManager.FindByIdAsync(userId.ToString());
             if (user == null) return BadRequest("User not found");
 
             var userRoles = await userManager.GetRolesAsync(user);
