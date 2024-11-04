@@ -47,10 +47,11 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors(x => x.AllowAnyOrigin()
+    app.UseCors(x => x.AllowAnyHeader()
                       .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials());
+                      .AllowCredentials()
+                      .WithOrigins("http://localhost:4200", "https://localhost:4200")
+                );
 
     app.UseSwagger();
     app.UseSwaggerUI(c =>
