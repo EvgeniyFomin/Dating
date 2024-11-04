@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"sixth\",\r\n  \"knownAs\": \"6th element\",\r\n  \"password\": \"passs\",\r\n  \"confirmPassword\": \"passs\",\r\n  \"gender\": \"2\",\r\n  \"dateOfBirth\": \"2006-08-31\",\r\n  \"city\": \"burgas\",\r\n  \"country\": \"bulgaria\"\r\n}\r\n",
+							"raw": "{\r\n  \"userName\": \"Ron\",\r\n  \"knownAs\": \"RonDonDon\",\r\n  \"password\": \"BadCat8\",\r\n  \"confirmPassword\": \"BadCat8\",\r\n  \"gender\": \"2\",\r\n  \"dateOfBirth\": \"2006-08-31\",\r\n  \"city\": \"burgas\",\r\n  \"country\": \"bulgaria\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,7 +96,47 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userName\": \"ron\",\r\n  \"password\": \"cat\"\r\n}",
+							"raw": "{\r\n  \"userName\": \"ron\",\r\n  \"password\": \"BadCat8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_https}}/Accounts/login",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(pm.response.text());\r",
+									"pm.collectionVariables.set(\"admin_token\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"admin\",\r\n  \"password\": \"Pa$$w0rd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,13 +233,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url_https}}/Users/11",
+							"raw": "{{url_https}}/Users/10",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
 								"Users",
-								"11"
+								"10"
 							]
 						}
 					},
@@ -798,6 +838,120 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Admins Controlles",
+			"item": [
+				{
+					"name": "Get Users With Roles",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url_https}}/Admins/users-with-roles",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Admins",
+								"users-with-roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Roles For Ana",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url_https}}/Admins/edit-user-roles/Ana?roles=Moderator,Member",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Admins",
+								"edit-user-roles",
+								"Ana"
+							],
+							"query": [
+								{
+									"key": "roles",
+									"value": "Moderator,Member"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Photos To Moderate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ana_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url_https}}/Admins/photos-to-moderate",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Admins",
+								"photos-to-moderate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -834,6 +988,10 @@
 		},
 		{
 			"key": "ana_token",
+			"value": ""
+		},
+		{
+			"key": "admin_token",
 			"value": ""
 		}
 	]

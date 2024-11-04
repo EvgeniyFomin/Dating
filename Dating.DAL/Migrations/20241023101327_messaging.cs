@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dating.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class messaging : Migration
+    public partial class Messaging : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

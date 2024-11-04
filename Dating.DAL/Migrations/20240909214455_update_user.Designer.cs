@@ -11,7 +11,7 @@ namespace Dating.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20240909214455_update_user")]
-    partial class update_user
+    partial class UpdateUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -12,7 +12,7 @@ namespace Dating.DAL.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20241023101327_messaging")]
-    partial class messaging
+    partial class Messaging
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
