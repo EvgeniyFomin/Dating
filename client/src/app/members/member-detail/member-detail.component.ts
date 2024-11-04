@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
 import { Message } from '../../_models/message';
 import { MessagesService } from '../../_services/messages.service';
+import { PresenceService } from '../../_services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -23,6 +24,7 @@ export class MemberDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
   private likeService = inject(LikesService);
+  presenceService = inject(PresenceService);
   hasLiked = computed(() => this.likeService.likeIds().includes(this.member.id));
   member: Member = {} as Member;
   images: GalleryItem[] = [];
