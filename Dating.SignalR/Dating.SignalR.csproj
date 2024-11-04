@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dating.Core\Dating.Core.csproj" />
+    <ProjectReference Include="..\Dating.DAL\Dating.DAL.csproj" />
   </ItemGroup>
 
 </Project>
