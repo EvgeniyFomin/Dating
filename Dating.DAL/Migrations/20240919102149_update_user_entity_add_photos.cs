@@ -5,7 +5,7 @@
 namespace Dating.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class update_user_entity_add_photos : Migration
+    public partial class UpdateUserEntityAddPhotos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

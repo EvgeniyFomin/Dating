@@ -11,13 +11,6 @@ namespace Dating.DAL.Repositories
 {
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await dataContext.Users
-                .Include(x => x.Photos)
-                .ToListAsync();
-        }
-
         public async Task<User?> GetByIdAsync(int id)
         {
             return await dataContext.Users
@@ -29,26 +22,12 @@ namespace Dating.DAL.Repositories
         {
             return await dataContext.Users
                 .Include(x => x.Photos)
-                .SingleOrDefaultAsync(x => x.UserName.ToLower() == name.ToLower());
+                .SingleOrDefaultAsync(x => x.NormalizedUserName == name.ToUpper());
         }
 
         public async Task<bool> SaveAllAsync()
         {
             return await dataContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<User> CreateAsync(User user)
-        {
-            var result = await dataContext.Users.AddAsync(user);
-
-            await dataContext.SaveChangesAsync();
-
-            return result.Entity;
-        }
-
-        public async Task<bool> IfExists(string userName)
-        {
-            return await dataContext.Users.AnyAsync(x => x.UserName.ToLower() == userName.ToLower());
         }
 
         // members
@@ -79,7 +58,7 @@ namespace Dating.DAL.Repositories
         public async Task<MemberDto?> GetMemberDtoByName(string name)
         {
             return await dataContext.Users
-                 .Where(x => x.UserName.ToLower() == name.ToLower())
+                 .Where(x => x.NormalizedUserName == name.ToUpper())
                  .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                  .SingleOrDefaultAsync();
         }
@@ -89,15 +68,6 @@ namespace Dating.DAL.Repositories
             return await dataContext.Users
                    .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
                    .SingleOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<bool> UpdateLastActiveDateAsync(int id)
-        {
-            var user = dataContext.Users.First(a => a.Id == id);
-
-            user.LastActive = DateTime.UtcNow;
-
-            return await SaveAllAsync();
         }
     }
 }

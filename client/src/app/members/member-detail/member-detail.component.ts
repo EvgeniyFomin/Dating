@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { LikesService } from './../../_services/likes.service';
+import { Component, computed, inject, OnInit, ViewChild } from '@angular/core';
 import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
@@ -21,6 +22,8 @@ export class MemberDetailComponent implements OnInit {
   @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   private route = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
+  private likeService = inject(LikesService);
+  hasLiked = computed(() => this.likeService.likeIds().includes(this.member.id));
   member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
@@ -66,5 +69,19 @@ export class MemberDetailComponent implements OnInit {
 
   onUpdateMessages(event: Message) {
     this.messages.push(event);
+  }
+
+  toggleLike() {
+    this.likeService.toggleLike(this.member.id).subscribe({
+      next: () => {
+        if (this.hasLiked()) {
+          this.likeService.likeIds.update(ids => ids.filter(x => x !== this.member.id))
+        }
+        else {
+          this.likeService.likeIds.update(ids => [...ids, this.member.id])
+        }
+      }
+    }
+    );
   }
 }

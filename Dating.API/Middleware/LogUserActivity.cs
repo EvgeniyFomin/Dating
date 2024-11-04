@@ -12,9 +12,9 @@ namespace Dating.API.Middleware
             if (context.HttpContext.User.Identity?.IsAuthenticated != true) return;
 
             var userId = resultsContext.HttpContext.User.GetUserId();
-            var userService = resultsContext.HttpContext.RequestServices.GetRequiredService<IUsersService>();
+            var accountService = resultsContext.HttpContext.RequestServices.GetRequiredService<IAccountService>();
 
-            await userService.UpdateLastActivityDateAsync(userId);
+            await accountService.UpdateLastActivityDateAsync(userId);
         }
     }
 }
