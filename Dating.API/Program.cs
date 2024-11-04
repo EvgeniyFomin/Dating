@@ -3,12 +3,14 @@ using Dating.API.Middleware;
 using Dating.API.Services;
 using Dating.API.Services.CloudinaryService;
 using Dating.API.Services.Interfaces;
+using Dating.Core.Extensions;
 using Dating.Core.Models;
 using Dating.Core.Models.Identity;
 using Dating.DAL.Context;
 using Dating.DAL.Repositories;
 using Dating.DAL.Repositories.Interfaces;
 using Dating.DAL.Seed;
+using Dating.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddSignalR();
 
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
@@ -32,16 +35,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 // DAL stuff
+builder.Services.AddDataContextServices(builder.Configuration);
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<ILikesRepository, LikesRepository>();
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
-
-builder.Services.AddDbContext<DataContext>(opt =>
-{
-    opt.UseSqlite(
-        builder.Configuration.GetConnectionString("SQLite"),
-        options => options.MigrationsAssembly("Dating.DAL"));
-});
 
 var app = builder.Build();
 
@@ -51,8 +48,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors(x => x.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials());
 
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -66,6 +64,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
