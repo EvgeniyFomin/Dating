@@ -32,8 +32,8 @@ export class MessagesService {
     });
   }
 
-  sendMessage(recepientId: number, content: string) {
-    return this.httpClient.post<Message>(this.baseUrl, { recipientId: recepientId, content: content });
+  async sendMessage(recipientId: number, content: string) {
+    return this.hubConnection?.invoke('SendMessage', { recipientId: recipientId, content: content })
   }
 
   deleteMessage(messageId: number) {
@@ -52,6 +52,10 @@ export class MessagesService {
 
     this.hubConnection.on('ReceiveMessageThread', messages => {
       this.messageThread.set(messages);
+    })
+
+    this.hubConnection.on('NewMessage', message => {
+      this.messageThread.update(messages => [...messages, message])
     })
   }
 

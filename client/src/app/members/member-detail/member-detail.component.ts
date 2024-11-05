@@ -1,5 +1,5 @@
 import { LikesService } from './../../_services/likes.service';
-import { Component, computed, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TabDirective, TabsetComponent, TabsModule } from 'ngx-bootstrap/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { Member } from '../../_models/member';
@@ -10,6 +10,7 @@ import { MemberMessagesComponent } from "../member-messages/member-messages.comp
 import { Message } from '../../_models/message';
 import { MessagesService } from '../../_services/messages.service';
 import { PresenceService } from '../../_services/presence.service';
+import { AccountService } from '../../_services/account.service';
 
 @Component({
   selector: 'app-member-detail',
@@ -19,17 +20,19 @@ import { PresenceService } from '../../_services/presence.service';
   styleUrl: './member-detail.component.css'
 })
 
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, OnDestroy {
+
   @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   private route = inject(ActivatedRoute);
   private messagesService = inject(MessagesService);
   private likeService = inject(LikesService);
+  private accountService = inject(AccountService);
   presenceService = inject(PresenceService);
+
   hasLiked = computed(() => this.likeService.likeIds().includes(this.member.id));
   member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
-  messages: Message[] = [];
 
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -51,12 +54,19 @@ export class MemberDetailComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    this.messagesService.stopHubConnection();
+  }
+
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
-    if (this.activeTab.heading === 'Messages' && this.messages.length === 0 && this.member) {
-      this.messagesService.getThread(this.member.id).subscribe({
-        next: messages => this.messages = messages
-      })
+    if (this.activeTab.heading === 'Messages' && this.member) {
+      const user = this.accountService.currentUser();
+      if (!user) return;
+
+      this.messagesService.createHubConnection(user, this.member.id);
+    } else {
+      this.messagesService.stopHubConnection();
     }
   }
 
@@ -67,10 +77,6 @@ export class MemberDetailComponent implements OnInit {
         tab.active = true;
       }
     }
-  }
-
-  onUpdateMessages(event: Message) {
-    this.messages.push(event);
   }
 
   toggleLike() {

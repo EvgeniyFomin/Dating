@@ -15,7 +15,7 @@ namespace Dating.SignalR
             var httpContext = Context.GetHttpContext();
             var otherUser = httpContext?.Request.Query["userId"];
 
-            if (Context.User == null || int.TryParse(otherUser, out int otherUserId)) throw new Exception("Cannot join the group");
+            if (Context.User == null || !int.TryParse(otherUser, out int otherUserId)) throw new Exception("Cannot join the group");
 
             var groupName = GetGroupName(Context.User.GetUserId(), otherUserId);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
