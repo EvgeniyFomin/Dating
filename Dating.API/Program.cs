@@ -4,6 +4,7 @@ using Dating.API.Services;
 using Dating.API.Services.CloudinaryService;
 using Dating.API.Services.Interfaces;
 using Dating.Core.Extensions;
+using Dating.Core.Interfaces;
 using Dating.Core.Models;
 using Dating.Core.Models.Identity;
 using Dating.DAL.Context;
