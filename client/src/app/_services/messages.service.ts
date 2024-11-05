@@ -5,14 +5,19 @@ import { Message } from '../_models/message';
 import { PaginatedResult } from '../_models/pagination';
 import { MessageParams } from '../_models/messageParams';
 import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
+import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagesService {
   private httpClient = inject(HttpClient);
-  baseUrl = environment.apiUrl + 'messages/';
+  private baseUrl = environment.apiUrl + 'messages/';
+  private hubUrl = environment.hubsUrl + 'message';
+  private hubConnection?: HubConnection;
   paginatedResult = signal<PaginatedResult<Message[]> | null>(null);
+  messageThread = signal<Message[]>([]);
 
   getThread(id: number) {
     return this.httpClient.get<Message[]>(this.baseUrl + 'thread/' + id);
@@ -33,5 +38,26 @@ export class MessagesService {
 
   deleteMessage(messageId: number) {
     return this.httpClient.delete(this.baseUrl + messageId);
+  }
+
+  createHubConnection(user: User, otherUserId: number) {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl(this.hubUrl + '?userId=' + otherUserId, {
+        accessTokenFactory: () => user.token
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection.start().catch(error => console.log(error));
+
+    this.hubConnection.on('ReceiveMessageThread', messages => {
+      this.messageThread.set(messages);
+    })
+  }
+
+  stopHubConnection() {
+    if (this.hubConnection?.state === HubConnectionState.Connected) {
+      this.hubConnection.stop().catch(error => console.log(error));
+    }
   }
 }
