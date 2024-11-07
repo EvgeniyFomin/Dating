@@ -50,7 +50,7 @@
             return Task.FromResult(onlineUsers);
         }
 
-        public static async Task<List<string>> GetConnectionsForUser(int userId)
+        public async Task<List<string>> GetConnectionsForUser(int userId)
         {
             List<string> connectionIds = [];
 

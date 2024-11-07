@@ -7,7 +7,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Dating.SignalR
 {
-    public class MessageHub(IMessageService messageService, IMessagesRepository messagesRepository, IHubContext<PresenceHub> presenceHub) : Hub
+    public class MessageHub(
+        IMessageService messageService,
+        IMessagesRepository messagesRepository,
+        IHubContext<PresenceHub> presenceHub,
+        IPresenceTracker presenceTracker) : Hub
     {
         private const string RECEIVE_MESSAGE_THREAD = "ReceiveMessageThread";
         private const string NEW_MESSAGE = "NewMessage";
@@ -51,7 +55,7 @@ namespace Dating.SignalR
             }
             else
             {
-                var connections = await PresenceTracker.GetConnectionsForUser(addedMessageDto.Recipient.Id);
+                var connections = await presenceTracker.GetConnectionsForUser(addedMessageDto.Recipient.Id);
                 if (connections != null && connections.Count != 0)
                 {
                     await presenceHub.Clients.Clients(connections)
