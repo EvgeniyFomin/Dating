@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Dating.SignalR
 {
-    public class MessageHub(IMessageService messageService, IMessagesRepository messagesRepository) : Hub
+    public class MessageHub(IMessageService messageService, IMessagesRepository messagesRepository, IHubContext<PresenceHub> presenceHub) : Hub
     {
         private const string RECEIVE_MESSAGE_THREAD = "ReceiveMessageThread";
         private const string NEW_MESSAGE = "NewMessage";
+        private const string NEW_MESSAGE_RECEIVED = "NewMessageReceived";
 
         public override async Task OnConnectedAsync()
         {
@@ -48,9 +49,21 @@ namespace Dating.SignalR
                 addedMessageDto.ReadDate = DateTime.UtcNow;
                 await messagesRepository.UpdateReadDate(addedMessageDto);
             }
+            else
+            {
+                var connections = await PresenceTracker.GetConnectionsForUser(addedMessageDto.Recipient.Id);
+                if (connections != null && connections.Count != 0)
+                {
+                    await presenceHub.Clients.Clients(connections)
+                        .SendAsync(NEW_MESSAGE_RECEIVED, new
+                        {
+                            userId = addedMessageDto.Sender.Id,
+                            knownAs = addedMessageDto.Sender.KnownAs
+                        });
+                }
+            }
 
             await Clients.Group(groupName).SendAsync(NEW_MESSAGE, addedMessageDto);
-
         }
 
         private static string GetGroupName(int callerId, int otherUserId)

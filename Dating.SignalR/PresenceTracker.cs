@@ -49,5 +49,24 @@
 
             return Task.FromResult(onlineUsers);
         }
+
+        public static async Task<List<string>> GetConnectionsForUser(int userId)
+        {
+            List<string> connectionIds = [];
+
+            if (_onlineUsers.TryGetValue(userId, out var connections))
+            {
+                lock (connections)
+                {
+                    connectionIds = connections;
+                }
+            }
+            else
+            {
+                connectionIds = [];
+            }
+
+            return await Task.FromResult(connectionIds);
+        }
     }
 }
