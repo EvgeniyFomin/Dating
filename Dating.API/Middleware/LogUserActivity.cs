@@ -1,5 +1,5 @@
-﻿using Dating.API.Extensions;
-using Dating.API.Services.Interfaces;
+﻿using Dating.API.Services.Interfaces;
+using Dating.Core.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Dating.API.Middleware

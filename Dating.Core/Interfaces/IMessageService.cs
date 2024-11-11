@@ -1,7 +1,7 @@
 ﻿using Dating.Core.Dtos;
 using Dating.Core.Models.Pagination;
 
-namespace Dating.API.Services.Interfaces
+namespace Dating.Core.Interfaces
 {
     public interface IMessageService
     {

@@ -1,26 +1,15 @@
-﻿using Dating.Core.Models;
-using Dating.DAL.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Role = Dating.Core.Models.Identity.Role;
 
-namespace Dating.API.Extensions
+namespace Dating.Core.Extensions
 {
     public static class IdentityServiceExtensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentityCore<User>(opt =>
-            {
-                opt.Password.RequireNonAlphanumeric = false;
-
-            })
-                .AddRoles<Role>()
-                .AddRoleManager<RoleManager<Role>>()
-                .AddEntityFrameworkStores<DataContext>();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -31,6 +20,22 @@ namespace Dating.API.Extensions
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
                             ValidateIssuer = false,
                             ValidateAudience = false
+                        };
+
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnMessageReceived = context =>
+                            {
+                                var accessToken = context.Request.Query["access_token"];
+                                var path = context.Request.Path;
+
+                                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                                {
+                                    context.Token = accessToken;
+                                }
+
+                                return Task.CompletedTask;
+                            }
                         };
                     });
 

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Dating.API.Extensions
+namespace Dating.Core.Extensions
 {
     public static class ClaimsPrincipleExtensions
     {
