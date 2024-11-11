@@ -15,25 +15,22 @@ namespace Dating.SignalR
         {
             if (Context.User == null) throw new HubException("Cannot get current user claim from context");
 
-            await tracker.UserConnected(Context.User.GetUserId(), Context.ConnectionId);
-            await Clients.Others.SendAsync(USER_IS_ONLINE, Context.User?.GetUserName());
+            var isOnline = await tracker.UserConnected(Context.User.GetUserId(), Context.ConnectionId);
+            if (isOnline) await Clients.Others.SendAsync(USER_IS_ONLINE, Context.User?.GetUserId());
 
             var currentUsers = await tracker.GetOnlineUserIds();
 
-            await Clients.All.SendAsync(GET_ONLINE_USERS, currentUsers);
+            await Clients.Caller.SendAsync(GET_ONLINE_USERS, currentUsers);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             if (Context.User == null) throw new HubException("Cannot get current user claim from context");
 
-            await tracker.UserDisconnected(Context.User.GetUserId(), Context.ConnectionId);
-            await Clients.Others.SendAsync(USER_IS_OFFLINE, Context.User?.GetUserName());
+            var isOffline = await tracker.UserDisconnected(Context.User.GetUserId(), Context.ConnectionId);
+            if (isOffline) await Clients.Others.SendAsync(USER_IS_OFFLINE, Context.User?.GetUserId());
+
             await base.OnDisconnectedAsync(exception);
-
-            var currentUsers = await tracker.GetOnlineUserIds();
-
-            await Clients.All.SendAsync(GET_ONLINE_USERS, currentUsers);
         }
     }
 }
