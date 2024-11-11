@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dating.DAL\Dating.DAL.csproj" />
+    <ProjectReference Include="..\Dating.SignalR\Dating.SignalR.csproj" />
   </ItemGroup>
 
 </Project>

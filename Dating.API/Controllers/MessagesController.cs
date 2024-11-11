@@ -1,8 +1,7 @@
-﻿using Dating.API.Extensions;
-using Dating.API.Middleware;
-using Dating.API.Services.Interfaces;
+﻿using Dating.API.Middleware;
 using Dating.Core.Dtos;
 using Dating.Core.Extensions;
+using Dating.Core.Interfaces;
 using Dating.Core.Models.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

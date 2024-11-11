@@ -11,6 +11,14 @@ namespace Dating.DAL.Repositories.Interfaces
         Task<Message?> GetByIdAsync(int id);
         Task<PagedList<MessageDto>> GetMessageDtosAsync(MessageParameters parameters);
         Task<IEnumerable<MessageDto>> GetThreadAsync(int currentUserId, int recipientId);
+        Task UpdateReadDate(MessageDto messageDto);
         Task<bool> SaveAllAsync();
+
+        // TODO think of interface segregation
+        Task<Group?> AddGroup(Group group);
+        Task<bool> RemoveConnectionAsync(Connection connection);
+        Task<Connection?> GetConnectionByIdAsync(string connectionId);
+        Task<Group?> GetGroupByNameAsync(string groupName);
+        Task<Group?> GetGroupForConnection(string connectionId);
     }
 }
