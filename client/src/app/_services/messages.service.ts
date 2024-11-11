@@ -7,6 +7,7 @@ import { MessageParams } from '../_models/messageParams';
 import { setPaginatedResponse, setPaginationHeaders } from './paginationHelper';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { User } from '../_models/user';
+import { Group } from '../_models/group';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,19 @@ export class MessagesService {
 
     this.hubConnection.on('NewMessage', message => {
       this.messageThread.update(messages => [...messages, message])
+    })
+
+    this.hubConnection.on("UpdatedGroup", (group: Group) => {
+      if (group.connections.some(x => x.userId === otherUserId)) {
+        this.messageThread.update(messages => {
+          messages.forEach(message => {
+            if (!message.readDate) {
+              message.readDate = new Date(Date.now());
+            }
+          });
+          return messages;
+        })
+      }
     })
   }
 

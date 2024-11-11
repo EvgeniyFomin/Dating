@@ -61,7 +61,9 @@ namespace Dating.DAL.Repositories
 
             await MarkAllUnreadAsRead(query, currentUserId);
 
-            return await query.ProjectTo<MessageDto>(mapper.ConfigurationProvider).ToListAsync();
+            return await query
+                .ProjectTo<MessageDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         public async Task<bool> SaveAllAsync()
@@ -88,14 +90,18 @@ namespace Dating.DAL.Repositories
         }
 
         // Candidates to be separated to the other repository class
-        public async Task AddGroup(Group group)
+        public async Task<Group?> AddGroup(Group group)
         {
-            await context.Groups.AddAsync(group);
+            var result = await context.Groups.AddAsync(group);
+
+            return await SaveAllAsync() ? result.Entity : null;
         }
 
-        public void RemoveConnection(Connection connection)
+        public async Task<bool> RemoveConnectionAsync(Connection connection)
         {
             context.Connections.Remove(connection);
+
+            return await SaveAllAsync();
         }
 
         public async Task<Connection?> GetConnectionByIdAsync(string connectionId)
@@ -108,6 +114,14 @@ namespace Dating.DAL.Repositories
             return await context.Groups
                 .Include(x => x.Connections)
                 .FirstOrDefaultAsync(x => x.Name == groupName);
+        }
+
+        public async Task<Group?> GetGroupForConnection(string connectionId)
+        {
+            return await context.Groups
+                .Include(x => x.Connections)
+                .Where(x => x.Connections.Any(y => y.ConnectionId == connectionId))
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -15,9 +15,10 @@ namespace Dating.DAL.Repositories.Interfaces
         Task<bool> SaveAllAsync();
 
         // TODO think of interface segregation
-        Task AddGroup(Group group);
-        void RemoveConnection(Connection connection);
+        Task<Group?> AddGroup(Group group);
+        Task<bool> RemoveConnectionAsync(Connection connection);
         Task<Connection?> GetConnectionByIdAsync(string connectionId);
         Task<Group?> GetGroupByNameAsync(string groupName);
+        Task<Group?> GetGroupForConnection(string connectionId);
     }
 }
