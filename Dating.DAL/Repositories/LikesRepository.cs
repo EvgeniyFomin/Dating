@@ -64,10 +64,5 @@ namespace Dating.DAL.Repositories
         {
             context.Likes.Remove(userLike);
         }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            return await context.SaveChangesAsync() > 0;
-        }
     }
 }

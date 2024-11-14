@@ -25,11 +25,6 @@ namespace Dating.DAL.Repositories
                 .SingleOrDefaultAsync(x => x.NormalizedUserName == name.ToUpper());
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await dataContext.SaveChangesAsync() > 0;
-        }
-
         // members
         public async Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters)
         {

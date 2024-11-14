@@ -41,6 +41,8 @@ builder.Services.AddDataContextServices(builder.Configuration);
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<ILikesRepository, LikesRepository>();
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
