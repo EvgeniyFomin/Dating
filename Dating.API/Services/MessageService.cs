@@ -63,7 +63,16 @@ namespace Dating.API.Services
 
         public async Task<IEnumerable<MessageDto>> GetThreadAsync(int currentUserId, int recipientId)
         {
-            var(query, threads) = await _messagesRepository.GetThreadAsync(currentUserId, recipientId);
+            var (query, threads) = await _messagesRepository.GetThreadAsync(currentUserId, recipientId);
+
+            await MarkAllUnreadMessagesAsRead(query, currentUserId);
+
+            return threads;
+        }
+
+        private async Task MarkAllUnreadMessagesAsRead(IQueryable<Message>? query, int currentUserId)
+        {
+            if (query == null) return;
 
             var unreadMessages = query.Where(x => x.ReadDate == null && x.RecipientId == currentUserId);
 
@@ -72,8 +81,6 @@ namespace Dating.API.Services
                 await unreadMessages.ForEachAsync(x => x.ReadDate = DateTime.UtcNow);
                 await unitOfWork.Complete();
             }
-
-            return threads;
         }
     }
 }
