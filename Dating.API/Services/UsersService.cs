@@ -7,35 +7,37 @@ using Dating.DAL.Repositories.Interfaces;
 
 namespace Dating.API.Services
 {
-    public class UsersService(IUsersRepository userRepository, IMapper mapper) : IUsersService
+    public class UsersService(IUnitOfWork unitOfWork, IMapper mapper) : IUsersService
     {
+        private readonly IUsersRepository _usersRepository = unitOfWork.UsersRepository;
+
         public async Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters)
         {
-            return await userRepository.GetMemberDtosAsync(parameters);
+            return await _usersRepository.GetMemberDtosAsync(parameters);
         }
 
         public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
         {
-            return await userRepository.GetMemberDtoById(id);
+            return await _usersRepository.GetMemberDtoById(id);
         }
 
         public async Task<User?> GetByNameAsync(string userName)
         {
-            return await userRepository.GetByNameAsync(userName);
+            return await _usersRepository.GetByNameAsync(userName);
         }
 
         public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
         {
-            return await userRepository.GetMemberDtoByName(userName);
+            return await _usersRepository.GetMemberDtoByName(userName);
         }
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)
         {
-            var user = await userRepository.GetByNameAsync(userName);
+            var user = await _usersRepository.GetByNameAsync(userName);
 
             mapper.Map(memberDto, user);
 
-            return await userRepository.SaveAllAsync();
+            return await unitOfWork.Complete();
         }
 
         public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
@@ -45,7 +47,7 @@ namespace Dating.API.Services
 
             user.Photos.Add(photo);
 
-            return await userRepository.SaveAllAsync();
+            return await unitOfWork.Complete();
         }
 
         public async Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId)
@@ -58,7 +60,7 @@ namespace Dating.API.Services
 
             photo.IsMain = true;
 
-            return await userRepository.SaveAllAsync();
+            return await unitOfWork.Complete();
         }
 
         public async Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId)
@@ -69,7 +71,7 @@ namespace Dating.API.Services
 
             user.Photos.Remove(photo);
 
-            return await userRepository.SaveAllAsync()
+            return await unitOfWork.Complete()
                 ? (true, photo.PublicId)
                 : (false, null);
         }

@@ -11,6 +11,5 @@ namespace Dating.DAL.Repositories.Interfaces
         Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int userId);
         Task AddLikeAsync(UserLike userLike);
         void RemoveLike(UserLike userLike);
-        Task<bool> SaveChangesAsync();
     }
 }

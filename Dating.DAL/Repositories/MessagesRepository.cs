@@ -27,7 +27,6 @@ namespace Dating.DAL.Repositories
             return await context.Messages.FindAsync(id);
         }
 
-
         public async Task<PagedList<MessageDto>> GetMessageDtosAsync(MessageParameters parameters)
         {
             var query = context.Messages
@@ -46,7 +45,7 @@ namespace Dating.DAL.Repositories
                 parameters);
         }
 
-        public async Task<IEnumerable<MessageDto>> GetThreadAsync(int currentUserId, int recipientId)
+        public async Task<(IQueryable<Message> query, IEnumerable<MessageDto> messageDtos)> GetThreadAsync(int currentUserId, int recipientId)
         {
             var query = context.Messages
                 .Where(x =>
@@ -59,16 +58,11 @@ namespace Dating.DAL.Repositories
                 )
                 .OrderBy(x => x.SentDate);
 
-            await MarkAllUnreadAsRead(query, currentUserId);
-
-            return await query
-                .ProjectTo<MessageDto>(mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await context.SaveChangesAsync() > 0;
+            return
+                (
+                    query,
+                    await query.ProjectTo<MessageDto>(mapper.ConfigurationProvider).ToListAsync()
+                );
         }
 
         public async Task UpdateReadDate(MessageDto messageDto)
@@ -76,52 +70,6 @@ namespace Dating.DAL.Repositories
             await context.Messages
                 .Where(x => x.Id == messageDto.Id)
                 .ExecuteUpdateAsync(u => u.SetProperty(x => x.ReadDate, messageDto.ReadDate));
-        }
-
-        private async Task MarkAllUnreadAsRead(IQueryable<Message> query, int currentUserId)
-        {
-            var unreadMessages = query.Where(x => x.ReadDate == null && x.RecipientId == currentUserId);
-
-            if (unreadMessages.Any())
-            {
-                await unreadMessages.ForEachAsync(x => x.ReadDate = DateTime.UtcNow);
-                _ = await SaveAllAsync();
-            }
-        }
-
-        // Candidates to be separated to the other repository class
-        public async Task<Group?> AddGroup(Group group)
-        {
-            var result = await context.Groups.AddAsync(group);
-
-            return await SaveAllAsync() ? result.Entity : null;
-        }
-
-        public async Task<bool> RemoveConnectionAsync(Connection connection)
-        {
-            context.Connections.Remove(connection);
-
-            return await SaveAllAsync();
-        }
-
-        public async Task<Connection?> GetConnectionByIdAsync(string connectionId)
-        {
-            return await context.Connections.FindAsync(connectionId);
-        }
-
-        public async Task<Group?> GetGroupByNameAsync(string groupName)
-        {
-            return await context.Groups
-                .Include(x => x.Connections)
-                .FirstOrDefaultAsync(x => x.Name == groupName);
-        }
-
-        public async Task<Group?> GetGroupForConnection(string connectionId)
-        {
-            return await context.Groups
-                .Include(x => x.Connections)
-                .Where(x => x.Connections.Any(y => y.ConnectionId == connectionId))
-                .FirstOrDefaultAsync();
         }
     }
 }

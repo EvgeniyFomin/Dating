@@ -6,11 +6,13 @@ using Dating.DAL.Repositories.Interfaces;
 
 namespace Dating.API.Services
 {
-    public class LikesService(ILikesRepository repository) : ILikesService
+    public class LikesService(IUnitOfWork unitOfWork) : ILikesService
     {
+        private readonly ILikesRepository _likesRepository = unitOfWork.LikesRepository;
+
         public async Task<bool> LikeToggle(int sourceUserId, int targetUserId)
         {
-            var existingLike = await repository.GetLikeAsync(sourceUserId, targetUserId);
+            var existingLike = await _likesRepository.GetLikeAsync(sourceUserId, targetUserId);
 
             if (existingLike == null)
             {
@@ -20,24 +22,24 @@ namespace Dating.API.Services
                     TargetUserId = targetUserId
                 };
 
-                await repository.AddLikeAsync(like);
+                await _likesRepository.AddLikeAsync(like);
             }
             else
             {
-                repository.RemoveLike(existingLike);
+                _likesRepository.RemoveLike(existingLike);
             }
 
-            return await repository.SaveChangesAsync();
+            return await unitOfWork.Complete();
         }
 
         public async Task<IEnumerable<int>> GetUserLikeIdsAsync(int currentUserId)
         {
-            return await repository.GetCurrentUserLikeIdsAsync(currentUserId);
+            return await _likesRepository.GetCurrentUserLikeIdsAsync(currentUserId);
         }
 
         public async Task<PagedList<MemberDto>> GetUserLikesAsync(LikesFilteringParameters parameters)
         {
-            return await repository.GetUserLikesAsync(parameters);
+            return await _likesRepository.GetUserLikesAsync(parameters);
         }
     }
 }
