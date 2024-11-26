@@ -16,19 +16,14 @@ namespace Dating.API.Services
             return await _usersRepository.GetMemberDtosAsync(parameters);
         }
 
-        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id)
+        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser)
         {
-            return await _usersRepository.GetMemberDtoById(id);
+            return await _usersRepository.GetMemberDtoByIdAsync(id, isCurrentUser);
         }
 
-        public async Task<User?> GetByNameAsync(string userName)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            return await _usersRepository.GetByNameAsync(userName);
-        }
-
-        public async Task<MemberDto?> GetMemberDtoByNameAsync(string userName)
-        {
-            return await _usersRepository.GetMemberDtoByName(userName);
+            return await _usersRepository.GetByIdAsync(id);
         }
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)

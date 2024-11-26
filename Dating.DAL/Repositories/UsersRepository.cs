@@ -50,19 +50,16 @@ namespace Dating.DAL.Repositories
             return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(mapper.ConfigurationProvider), parameters);
         }
 
-        public async Task<MemberDto?> GetMemberDtoByName(string name)
+        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser)
         {
-            return await dataContext.Users
-                 .Where(x => x.NormalizedUserName == name.ToUpper())
-                 .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-                 .SingleOrDefaultAsync();
-        }
+            var query = dataContext.Users
+                            .Where(x => x.Id == id)
+                            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+                            .AsQueryable();
 
-        public async Task<MemberDto?> GetMemberDtoById(int id)
-        {
-            return await dataContext.Users
-                   .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-                   .SingleOrDefaultAsync(x => x.Id == id);
+            if (isCurrentUser) query = query.IgnoreQueryFilters();
+
+            return await query.SingleOrDefaultAsync();
         }
     }
 }

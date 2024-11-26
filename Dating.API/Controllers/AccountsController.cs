@@ -7,9 +7,7 @@ namespace Dating.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountsController(
-        IAccountService accountService,
-        ITokenService tokenService) : ControllerBase
+    public class AccountsController(IAccountService accountService, ITokenService tokenService) : ControllerBase
     {
         private readonly ITokenService _tokenService = tokenService;
 
@@ -51,6 +49,7 @@ namespace Dating.API.Controllers
         {
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName!,
                 Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,

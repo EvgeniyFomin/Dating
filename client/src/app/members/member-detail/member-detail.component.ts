@@ -7,11 +7,10 @@ import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 import { TimeagoModule } from 'ngx-timeago';
 import { DatePipe } from '@angular/common';
 import { MemberMessagesComponent } from "../member-messages/member-messages.component";
-import { Message } from '../../_models/message';
 import { MessagesService } from '../../_services/messages.service';
 import { PresenceService } from '../../_services/presence.service';
 import { AccountService } from '../../_services/account.service';
-import { HubConnection, HubConnectionState } from '@microsoft/signalr';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Component({
   selector: 'app-member-detail',
@@ -41,7 +40,6 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       next: data => {
         this.member = data['member'];
         this.member && this.member.photos.map(p => {
-          this.images = [];
           this.images.push(new ImageItem({
             src: p.url,
             thumb: p.url
@@ -51,12 +49,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     })
 
     this.route.paramMap.subscribe({ next: _ => this.onRouteParamsChange() });
-
-    this.route.queryParams.subscribe({
-      next: params => {
-        params['tab'] && this.selectTab(params['tab'])
-      }
-    })
+    this.route.queryParams.subscribe({ next: params => params['tab'] && this.selectTab(params['tab']) });
   }
 
   ngOnDestroy(): void {

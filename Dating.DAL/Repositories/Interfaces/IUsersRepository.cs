@@ -11,7 +11,6 @@ namespace Dating.DAL.Repositories.Interfaces
 
         // member
         Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters);
-        Task<MemberDto?> GetMemberDtoById(int id);
-        Task<MemberDto?> GetMemberDtoByName(string name);
+        Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser);
     }
 }
