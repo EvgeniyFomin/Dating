@@ -5,8 +5,9 @@ namespace Dating.DAL.Repositories.Interfaces
 {
     public interface IPhotosRepository
     {
-        Task<IEnumerable<PhotoForApprovalDto>> GetUnapprovedPhotos();
-        Task<Photo?> GetById(int photoId);
+        Task<IEnumerable<PhotoForApprovalDto>> GetUnapprovedPhotosAsync();
+        Task<Photo?> GetByIdAsync(int photoId);
+        Task<bool> ApprovePhotoAsync(int photoId);
         void Remove(Photo photo);
     }
 }

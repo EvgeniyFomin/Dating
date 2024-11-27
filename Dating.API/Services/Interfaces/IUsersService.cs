@@ -8,10 +8,8 @@ namespace Dating.API.Services.Interfaces
     {
         Task<PagedList<MemberDto>> GetPagedMemberDtosAsync(UserFilteringParameters parameters);
         Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser);
-        Task<User?> GetByIdAsync(int id);
+        Task<User?> GetByIdAsync(int id, bool isUserCurrent);
         Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName);
-        Task<bool> AddPhotoToUserAsync(User user, Photo photo);
         Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId);
-        Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId);
     }
 }

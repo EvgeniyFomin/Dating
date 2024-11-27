@@ -49,14 +49,10 @@ namespace Dating.API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            var user = await usersService.GetByIdAsync(User.GetUserId());
+            var user = await usersService.GetByIdAsync(User.GetUserId(), true);
             if (user == null) return BadRequest("User cannot be updated");
 
-            var photo = await photoService.AddPhotoAsync(file);
-            if (photo == null) return BadRequest("Photo was not uploaded");
-
-            if (!await usersService.AddPhotoToUserAsync(user, photo))
-                return BadRequest("User was not updated - photo not added");
+            var photo = await photoService.AddPhotoAsync(file, user);
 
             return CreatedAtAction(
                     nameof(GetById),
@@ -67,7 +63,7 @@ namespace Dating.API.Controllers
         [HttpPut("set-main-photo/{photoId:int}")]
         public async Task<ActionResult> SetMainPhoto(int photoId)
         {
-            var user = await usersService.GetByIdAsync(User.GetUserId());
+            var user = await usersService.GetByIdAsync(User.GetUserId(), true);
             if (user == null) return BadRequest("User cannot be found");
 
             return (await usersService.SetPhotoAsMainToUserAsync(user, photoId))
@@ -78,22 +74,12 @@ namespace Dating.API.Controllers
         [HttpDelete("delete-photo/{photoId:int}")]
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
-            var user = await usersService.GetByIdAsync(User.GetUserId());
+            var user = await usersService.GetByIdAsync(User.GetUserId(), true);
             if (user == null) return BadRequest("User cannot be found");
 
-            var (result, publicId) = await usersService.DeletePhotoReturnPublicIdAsync(user, photoId);
-
-            if (!result) return BadRequest("User's photo cannot be deleted");
-
-            if (!string.IsNullOrWhiteSpace(publicId))
-            {
-                var deletionCloudinaryResult = await photoService.DeletePhotoAsync(publicId);
-                return deletionCloudinaryResult.Error == null
-                    ? Ok()
-                    : BadRequest(deletionCloudinaryResult.Error);
-            }
-
-            return Ok();
+            return await photoService.DeletePhotoAsync(photoId, user)
+                ? NoContent()
+                : BadRequest("photo was not deleted");
         }
     }
 }

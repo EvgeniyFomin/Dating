@@ -21,9 +21,9 @@ namespace Dating.API.Services
             return await _usersRepository.GetMemberDtoByIdAsync(id, isCurrentUser);
         }
 
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id, bool isUserCurrent)
         {
-            return await _usersRepository.GetByIdAsync(id);
+            return await _usersRepository.GetByIdAsync(id, isUserCurrent);
         }
 
         public async Task<bool> UpdateUserAsync(MemberUpdateDto memberDto, string userName)
@@ -35,40 +35,17 @@ namespace Dating.API.Services
             return await unitOfWork.Complete();
         }
 
-        public async Task<bool> AddPhotoToUserAsync(User user, Photo photo)
-        {
-            if (user.Photos.Count == 0)
-                photo.IsMain = true;
-
-            user.Photos.Add(photo);
-
-            return await unitOfWork.Complete();
-        }
-
         public async Task<bool> SetPhotoAsMainToUserAsync(User user, int photoId)
         {
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
-            if (photo == null || photo.IsMain) return await Task.FromResult(false);
+            if (photo == null || photo.IsMain) return false;
 
             user.Photos.Where(x => x.IsMain)?.ToList()?.ForEach(x => x.IsMain = false);
 
             photo.IsMain = true;
 
             return await unitOfWork.Complete();
-        }
-
-        public async Task<(bool, string?)> DeletePhotoReturnPublicIdAsync(User user, int photoId)
-        {
-            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
-
-            if (photo == null || photo.IsMain) return (false, null);
-
-            user.Photos.Remove(photo);
-
-            return await unitOfWork.Complete()
-                ? (true, photo.PublicId)
-                : (false, null);
         }
     }
 }

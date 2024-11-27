@@ -6,7 +6,7 @@ namespace Dating.DAL.Repositories.Interfaces
 {
     public interface IUsersRepository
     {
-        Task<User?> GetByIdAsync(int id);
+        Task<User?> GetByIdAsync(int id, bool isUserCurrent);
         Task<User?> GetByNameAsync(string name);
 
         // member

@@ -11,11 +11,16 @@ namespace Dating.DAL.Repositories
 {
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id, bool isUserCurrent)
         {
-            return await dataContext.Users
+            var query = dataContext.Users
+                .Where(x => x.Id == id)
                 .Include(x => x.Photos)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .AsQueryable();
+
+            if (isUserCurrent) query = query.IgnoreQueryFilters();
+
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<User?> GetByNameAsync(string name)
