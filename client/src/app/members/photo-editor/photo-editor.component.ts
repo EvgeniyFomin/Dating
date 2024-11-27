@@ -52,21 +52,10 @@ export class PhotoEditorComponent implements OnInit {
       const photo = JSON.parse(response);
       const updatedMember = { ...this.member() }
       updatedMember.photos.push(photo);
-      this.memberChange.emit(updatedMember);
 
       if (photo.isMain) {
-        const user = this.accountService.currentUser();
-        if (user) {
-          user.photoUrl = photo.url;
-          this.accountService.setCurrentUser(user);
-        }
+        this.updateMainPhoto(photo, updatedMember);
       }
-
-      updatedMember.mainPhotoUrl = photo.url;
-      updatedMember.photos.forEach(p => {
-        if (p.isMain) p.isMain = false;
-        if (p.id === photo.id) p.isMain = true;
-      });
 
       this.memberChange.emit(updatedMember);
     }
@@ -81,19 +70,8 @@ export class PhotoEditorComponent implements OnInit {
   setMainPhoto(photo: Photo) {
     this.memberService.setMainPhoto(photo).subscribe({
       next: _ => {
-        const user = this.accountService.currentUser();
-        if (user) {
-          user.photoUrl = photo.url;
-          this.accountService.setCurrentUser(user);
-        }
-
         const updatedMember = { ...this.member() }
-        updatedMember.mainPhotoUrl = photo.url;
-        updatedMember.photos.forEach(p => {
-          if (p.isMain) p.isMain = false;
-          if (p.id === photo.id) p.isMain = true;
-        });
-
+        this.updateMainPhoto(photo, updatedMember);
         this.memberChange.emit(updatedMember);
       }
     })
@@ -107,5 +85,18 @@ export class PhotoEditorComponent implements OnInit {
         this.memberChange.emit(updatedMember);
       }
     })
+  }
+
+  private updateMainPhoto(photo: Photo, member: Member) {
+    const user = this.accountService.currentUser();
+    if (user) {
+      user.photoUrl = photo.url;
+      this.accountService.setCurrentUser(user);
+    }
+    member.mainPhotoUrl = photo.url;
+    member.photos.forEach(p => {
+      if (p.isMain) p.isMain = false;
+      if (p.id === photo.id) p.isMain = true;
+    });
   }
 }
