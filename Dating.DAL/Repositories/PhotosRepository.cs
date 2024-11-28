@@ -28,9 +28,11 @@ namespace Dating.DAL.Repositories
 
         public async Task<bool> ApprovePhotoAsync(int photoId)
         {
+            Resu
+
             return await context.Photos
                 .IgnoreQueryFilters()
-                .Where(x => x.Id == photoId)
+                .Where(x => x.Id == photoId && x.IsApproved == false)
                 .ExecuteUpdateAsync(u => u.SetProperty(x => x.IsApproved, true))
                 > 0;
         }

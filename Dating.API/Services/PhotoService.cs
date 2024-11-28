@@ -14,9 +14,6 @@ namespace Dating.API.Services
             var photo = await cloudinaryService.UploadPhotoAsync(file)
                 ?? throw new Exception("Photo was not uploaded");
 
-            if (user.Photos.Count == 0)
-                photo.IsMain = true;
-
             user.Photos.Add(photo);
 
             return await unitOfWork.Complete()

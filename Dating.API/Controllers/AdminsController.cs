@@ -49,7 +49,7 @@ namespace Dating.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photos-to-approval")]
+        [HttpGet("photos-for-approval")]
         public async Task<ActionResult> GetPhotosForApproval()
         {
             var result = await photoService.GetUnapprovedPhotoDtosAsync();
@@ -69,12 +69,19 @@ namespace Dating.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpPut("reject-photo/{id:int}")]
+        [HttpDelete("reject-photo/{id:int}")]
         public async Task<ActionResult> RejectPhoto(int id)
         {
-            return await photoService.RemovePhotoAsync(id)
-                 ? Ok("photo was sucessfully rejected")
-                 : BadRequest("Photo was not approved");
+            try
+            {
+                return await photoService.RemovePhotoAsync(id)
+                                 ? Ok("photo was sucessfully rejected")
+                                 : BadRequest("Photo was not approved");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
