@@ -77,7 +77,7 @@ namespace Dating.API.Controllers
             var user = await usersService.GetByIdAsync(User.GetUserId(), true);
             if (user == null) return BadRequest("User cannot be found");
 
-            return await photoService.DeletePhotoAsync(photoId, user)
+            return await photoService.DeleteUsersPhotoAsync(photoId, user)
                 ? NoContent()
                 : BadRequest("photo was not deleted");
         }

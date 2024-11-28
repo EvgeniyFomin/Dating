@@ -1,4 +1,5 @@
-﻿using Dating.Core.Models;
+﻿using Dating.API.Services.Interfaces;
+using Dating.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dating.API.Controllers
 {
     [Route("api/[controller]")]
-    public class AdminsController(UserManager<User> userManager) : ControllerBase
+    public class AdminsController(UserManager<User> userManager, IPhotoService photoService) : ControllerBase
     {
         [Authorize(Policy = "RequireAdminRole")]
         [HttpGet("users-with-roles")]
@@ -48,10 +49,32 @@ namespace Dating.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photos-to-moderate")]
-        public ActionResult GetPhotosForModeration()
+        [HttpGet("photos-to-approval")]
+        public async Task<ActionResult> GetPhotosForApproval()
         {
-            return Ok("Admins or moderators can see this");
+            var result = await photoService.GetUnapprovedPhotoDtosAsync();
+
+            return result != null && result.Any()
+                ? Ok(result)
+                : BadRequest("No unapproved photos in the system");
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPut("approve-photo/{id:int}")]
+        public async Task<ActionResult> ApprovePhoto(int id)
+        {
+            return await photoService.ApprovePhotoAsync(id)
+                 ? Ok("photo was sucessfully approved")
+                 : BadRequest("Photo was not approved");
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPut("reject-photo/{id:int}")]
+        public async Task<ActionResult> RejectPhoto(int id)
+        {
+            return await photoService.RemovePhotoAsync(id)
+                 ? Ok("photo was sucessfully rejected")
+                 : BadRequest("Photo was not approved");
         }
     }
 }

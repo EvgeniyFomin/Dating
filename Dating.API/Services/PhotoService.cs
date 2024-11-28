@@ -24,7 +24,7 @@ namespace Dating.API.Services
                 : throw new Exception("User was not updated - photo not added");
         }
 
-        public async Task<bool> DeletePhotoAsync(int photoId, User user)
+        public async Task<bool> DeleteUsersPhotoAsync(int photoId, User user)
         {
             var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
@@ -41,9 +41,34 @@ namespace Dating.API.Services
             return false;
         }
 
+        public async Task<bool> RemovePhotoAsync(int id)
+        {
+            var photo = await unitOfWork.PhotoRepository.GetByIdAsync(id) ?? throw new Exception("Photo doesn't exist in db");
+
+            if (photo.PublicId != null)
+            {
+                var deletionResult = await cloudinaryService.DeletePhotoAsync(photo.PublicId);
+                if (deletionResult.Error != null) throw new Exception(deletionResult.Error.Message);
+            }
+
+            unitOfWork.PhotoRepository.Remove(photo);
+
+            return await unitOfWork.Complete();
+        }
+
         public PhotoDto MapToDto(Photo photo)
         {
             return mapper.Map<PhotoDto>(photo);
+        }
+
+        public async Task<IEnumerable<PhotoForApprovalDto>> GetUnapprovedPhotoDtosAsync()
+        {
+            return await unitOfWork.PhotoRepository.GetUnapprovedPhotosAsync();
+        }
+
+        public async Task<bool> ApprovePhotoAsync(int photoId)
+        {
+            return await unitOfWork.PhotoRepository.ApprovePhotoAsync(photoId);
         }
     }
 }
