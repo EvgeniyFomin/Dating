@@ -65,7 +65,17 @@ namespace Dating.API.Services
 
         public async Task<bool> ApprovePhotoAsync(int photoId)
         {
-            return await unitOfWork.PhotoRepository.ApprovePhotoAsync(photoId);
+            var user = await unitOfWork.UsersRepository.GetByPhotoIdAsync(photoId) ?? throw new Exception("Cannot get user from db");
+            var photo = await unitOfWork.PhotoRepository.GetByIdAsync(photoId) ?? throw new Exception("Cannot get photo from db");
+
+            photo.IsApproved = true;
+
+            if (!user.Photos.Any(x => x.IsMain))
+            {
+                photo.IsMain = true;
+            }
+
+            return await unitOfWork.Complete();
         }
     }
 }

@@ -54,9 +54,7 @@ namespace Dating.API.Controllers
         {
             var result = await photoService.GetUnapprovedPhotoDtosAsync();
 
-            return result != null && result.Any()
-                ? Ok(result)
-                : BadRequest("No unapproved photos in the system");
+            return Ok(result);
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
@@ -64,7 +62,7 @@ namespace Dating.API.Controllers
         public async Task<ActionResult> ApprovePhoto(int id)
         {
             return await photoService.ApprovePhotoAsync(id)
-                 ? Ok("photo was sucessfully approved")
+                 ? Ok()
                  : BadRequest("Photo was not approved");
         }
 
@@ -75,10 +73,10 @@ namespace Dating.API.Controllers
             try
             {
                 return await photoService.RemovePhotoAsync(id)
-                                 ? Ok("photo was sucessfully rejected")
+                                 ? Ok()
                                  : BadRequest("Photo was not approved");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

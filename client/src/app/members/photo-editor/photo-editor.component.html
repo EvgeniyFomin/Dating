@@ -1,7 +1,10 @@
 <div class="row">
     @for (photo of member().photos; track photo.id) {
-    <div class="col-2">
-        <img src="{{photo.url}}" alt="user's photo" class="img-thumbnail mb-1">
+    <div class="col-2 mb-1 img-wrapper">
+        <img src="{{photo.url}}" alt="user's photo" class="img-thumbnail mb-1" [class.not-approved]="!photo.isApproved">
+        <div class="text-center img-text" *ngIf="!photo.isApproved">
+            Awaiting approval
+        </div>
         <div class="text-center">
             <button 
                 class="btn btn-sm me-1" 
@@ -19,8 +22,6 @@
         </div>
     </div>
     }
-</div>
-
 <!-- photo uploader -->
 <div class="row mt-5">
     <div class="col-md-3">

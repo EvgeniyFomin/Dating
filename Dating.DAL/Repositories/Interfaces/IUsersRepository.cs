@@ -8,6 +8,7 @@ namespace Dating.DAL.Repositories.Interfaces
     {
         Task<User?> GetByIdAsync(int id, bool isUserCurrent);
         Task<User?> GetByNameAsync(string name);
+        Task<User?> GetByPhotoIdAsync(int photoId);
 
         // member
         Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters);

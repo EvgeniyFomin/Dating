@@ -24,7 +24,6 @@ export class MemberEditComponent implements OnInit {
       $event.returnValue = true;
     }
   };
-
   private accountService = inject(AccountService);
   private memberService = inject(MembersService);
   private toastr = inject(ToastrService);
@@ -39,7 +38,11 @@ export class MemberEditComponent implements OnInit {
 
     if (!user) return;
     this.memberService.getUserById(user.id.toString()).subscribe({
-      next: member => this.member = member
+      next: member => {
+        user!.photoUrl = member.mainPhotoUrl;
+        this.accountService.currentUser.set(user);
+        this.member = member
+      }
     });
   }
 

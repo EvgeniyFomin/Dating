@@ -22,7 +22,7 @@ namespace Dating.API.Controllers
             var (result, user) = await accountService.CreateAccountAsync(registerDto);
 
             return result.Succeeded
-                ? Ok(CreateUserDto(user))
+                ? Ok(await CreateUserDto(user))
                 : BadRequest(result.Errors);
         }
 
@@ -33,7 +33,7 @@ namespace Dating.API.Controllers
 
             if (user == null || user.UserName == null)
             {
-                return NotFound($"User {registerDto.UserName} not found in the system");
+                return Unauthorized($"User {registerDto.UserName} not found in the system");
             }
 
             var result = await accountService.CheckIfPasswordValid(user, registerDto.Password);

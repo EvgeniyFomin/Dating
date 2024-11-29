@@ -1,1 +1,20 @@
-<p>photo-management works!</p>
+<div class='row'>
+    <button class="btn btn-info btn-sm col-sm-1" (click)="getPhotosForApproval()">
+        <i class="fa fa-refresh"> </i>
+    </button>
+</div>
+<div class='row'>
+    @for (photo of photos(); track photo.id) {
+    <div class='col-sm-2 text-center'>
+        <h4>{{photo.userName}}</h4>
+        <img src='{{photo.url}}' class='img-thumbnail p-1' alt='{{photo.userName}}'>
+
+        <div class='btn-group' style="width: 90%;">
+            <button class='btn btn-sm btn-success' (click)='approve(photo.id)'><i class="fa fa-check"></i>
+                Approve</button>
+            <button class='btn btn-sm btn-primary' (click)='reject(photo.id)'><i class="fa fa-trash"></i>
+                Reject</button>
+        </div>
+    </div>
+    }
+</div>

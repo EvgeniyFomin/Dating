@@ -30,6 +30,15 @@ namespace Dating.DAL.Repositories
                 .SingleOrDefaultAsync(x => x.NormalizedUserName == name.ToUpper());
         }
 
+        public async Task<User?> GetByPhotoIdAsync(int photoId)
+        {
+            return await dataContext.Users
+                  .Include(p => p.Photos)
+                  .IgnoreQueryFilters()
+                  .Where(x => x.Photos.Any(p => p.Id == photoId))
+                  .FirstOrDefaultAsync();
+        }
+
         // members
         public async Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters)
         {
@@ -66,5 +75,7 @@ namespace Dating.DAL.Repositories
 
             return await query.SingleOrDefaultAsync();
         }
+
+
     }
 }
