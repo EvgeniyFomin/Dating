@@ -20,6 +20,7 @@ namespace Dating.API.Controllers
                 {
                     x.Id,
                     UserName = x.UserName,
+                    KnownAs = x.KnownAs,
                     Roles = x.UserRoles.Select(r => r.Role.Name).ToList()
                 }).ToListAsync();
 
@@ -80,6 +81,19 @@ namespace Dating.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete("remove-user/{id:int}")]
+        public async Task<ActionResult> RemoveUser(int id)
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user == null) return BadRequest("User was not found");
+
+            var result = await userManager.DeleteAsync(user);
+            return result.Succeeded
+                ? Ok()
+                : BadRequest(result.Errors);
         }
     }
 }

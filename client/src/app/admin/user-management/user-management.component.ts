@@ -11,6 +11,7 @@ import { RolesModalComponent } from '../../modals/roles-modal/roles-modal.compon
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.css'
 })
+
 export class UserManagementComponent implements OnInit {
   private adminService = inject(AdminService);
   private modalService = inject(BsModalService)
@@ -48,4 +49,12 @@ export class UserManagementComponent implements OnInit {
       }
     })
   }
+
+  removeUser(id: number) {
+    this.adminService.removeUser(id).subscribe({
+      next: _ => {
+        this.users.splice(this.users.findIndex(m => m.id === id), 1);
+      }
+    })
+  };
 }

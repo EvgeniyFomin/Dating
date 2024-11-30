@@ -31,4 +31,8 @@ export class AdminService {
   rejectPhoto(photoId: number) {
     return this.httpClient.delete(this.baseUrl + 'reject-photo/' + photoId);
   }
+
+  removeUser(id: number) {
+    return this.httpClient.delete(this.baseUrl + "remove-user/" + id);
+  }
 }
