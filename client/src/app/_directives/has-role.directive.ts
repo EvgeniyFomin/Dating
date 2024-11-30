@@ -5,6 +5,7 @@ import { AccountService } from '../_services/account.service';
   selector: '[appHasRole]',
   standalone: true
 })
+
 export class HasRoleDirective implements OnInit {
   @Input() appHasRole: string[] = [];
   private accountService = inject(AccountService);
