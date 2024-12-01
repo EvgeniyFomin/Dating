@@ -21,10 +21,7 @@ export class PhotoManagementComponent implements OnInit {
 
   getPhotosForApproval() {
     this.adminService.getPhotosForApproval().subscribe({
-      next: photos => {
-        console.log(JSON.stringify(photos));
-        this.photos.set(photos);
-      },
+      next: photos => this.photos.set(photos),
       error: error => console.error(error)
     })
   }

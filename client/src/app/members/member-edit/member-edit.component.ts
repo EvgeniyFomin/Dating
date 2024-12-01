@@ -35,8 +35,8 @@ export class MemberEditComponent implements OnInit {
 
   loadMember() {
     const user = this.accountService.currentUser();
-
     if (!user) return;
+
     this.memberService.getUserById(user.id.toString()).subscribe({
       next: member => {
         user!.photoUrl = member.mainPhotoUrl;
