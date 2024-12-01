@@ -11,11 +11,16 @@ namespace Dating.DAL.Repositories
 {
     public class UsersRepository(DataContext dataContext, IMapper mapper) : IUsersRepository
     {
-        public async Task<User?> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id, bool isUserCurrent)
         {
-            return await dataContext.Users
+            var query = dataContext.Users
+                .Where(x => x.Id == id)
                 .Include(x => x.Photos)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .AsQueryable();
+
+            if (isUserCurrent) query = query.IgnoreQueryFilters();
+
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<User?> GetByNameAsync(string name)
@@ -23,6 +28,15 @@ namespace Dating.DAL.Repositories
             return await dataContext.Users
                 .Include(x => x.Photos)
                 .SingleOrDefaultAsync(x => x.NormalizedUserName == name.ToUpper());
+        }
+
+        public async Task<User?> GetByPhotoIdAsync(int photoId)
+        {
+            return await dataContext.Users
+                  .Include(p => p.Photos)
+                  .IgnoreQueryFilters()
+                  .Where(x => x.Photos.Any(p => p.Id == photoId))
+                  .FirstOrDefaultAsync();
         }
 
         // members
@@ -50,19 +64,18 @@ namespace Dating.DAL.Repositories
             return await PagedList<MemberDto>.CreateAsync(query.ProjectTo<MemberDto>(mapper.ConfigurationProvider), parameters);
         }
 
-        public async Task<MemberDto?> GetMemberDtoByName(string name)
+        public async Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser)
         {
-            return await dataContext.Users
-                 .Where(x => x.NormalizedUserName == name.ToUpper())
-                 .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-                 .SingleOrDefaultAsync();
+            var query = dataContext.Users
+                            .Where(x => x.Id == id)
+                            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
+                            .AsQueryable();
+
+            if (isCurrentUser) query = query.IgnoreQueryFilters();
+
+            return await query.SingleOrDefaultAsync();
         }
 
-        public async Task<MemberDto?> GetMemberDtoById(int id)
-        {
-            return await dataContext.Users
-                   .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-                   .SingleOrDefaultAsync(x => x.Id == id);
-        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dating.Core.Models;
+﻿using Dating.API.Services.Interfaces;
+using Dating.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dating.API.Controllers
 {
     [Route("api/[controller]")]
-    public class AdminsController(UserManager<User> userManager) : ControllerBase
+    public class AdminsController(UserManager<User> userManager, IPhotoService photoService) : ControllerBase
     {
         [Authorize(Policy = "RequireAdminRole")]
         [HttpGet("users-with-roles")]
@@ -19,6 +20,7 @@ namespace Dating.API.Controllers
                 {
                     x.Id,
                     UserName = x.UserName,
+                    KnownAs = x.KnownAs,
                     Roles = x.UserRoles.Select(r => r.Role.Name).ToList()
                 }).ToListAsync();
 
@@ -48,10 +50,50 @@ namespace Dating.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photos-to-moderate")]
-        public ActionResult GetPhotosForModeration()
+        [HttpGet("photos-for-approval")]
+        public async Task<ActionResult> GetPhotosForApproval()
         {
-            return Ok("Admins or moderators can see this");
+            var result = await photoService.GetUnapprovedPhotoDtosAsync();
+
+            return Ok(result);
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPut("approve-photo/{id:int}")]
+        public async Task<ActionResult> ApprovePhoto(int id)
+        {
+            return await photoService.ApprovePhotoAsync(id)
+                 ? Ok()
+                 : BadRequest("Photo was not approved");
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpDelete("reject-photo/{id:int}")]
+        public async Task<ActionResult> RejectPhoto(int id)
+        {
+            try
+            {
+                return await photoService.RemovePhotoAsync(id)
+                                 ? Ok()
+                                 : BadRequest("Photo was not approved");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpDelete("remove-user/{id:int}")]
+        public async Task<ActionResult> RemoveUser(int id)
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user == null) return BadRequest("User was not found");
+
+            var result = await userManager.DeleteAsync(user);
+            return result.Succeeded
+                ? Ok()
+                : BadRequest(result.Errors);
         }
     }
 }

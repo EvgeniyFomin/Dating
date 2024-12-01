@@ -9,6 +9,7 @@ namespace Dating.Core.Models
         public required string Url { get; set; } = string.Empty;
         public bool IsMain { get; set; }
         public string? PublicId { get; set; }
+        public bool IsApproved { get; set; }
 
         // navigation property
         public int UserId { get; set; }

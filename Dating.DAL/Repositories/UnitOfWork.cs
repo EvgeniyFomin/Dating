@@ -7,16 +7,15 @@ namespace Dating.DAL.Repositories
                             IUsersRepository usersRepository,
                             ILikesRepository likesRepository,
                             IMessagesRepository messagesRepository,
-                            IGroupsRepository groupsRepository
+                            IGroupsRepository groupsRepository,
+                            IPhotosRepository photoRepository
                             ) : IUnitOfWork
     {
         public IUsersRepository UsersRepository => usersRepository;
-
         public ILikesRepository LikesRepository => likesRepository;
-
         public IMessagesRepository MessagesRepository => messagesRepository;
-
         public IGroupsRepository GroupsRepository => groupsRepository;
+        public IPhotosRepository PhotoRepository => photoRepository;
 
         public async Task<bool> Complete()
         {

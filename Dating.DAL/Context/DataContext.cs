@@ -13,6 +13,7 @@ namespace Dating.DAL.Context
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,6 +56,9 @@ namespace Dating.DAL.Context
                 .WithOne(ur => ur.Role)
                 .HasForeignKey(ui => ui.RoleId)
                 .IsRequired();
+
+            modelBuilder.Entity<Photo>()
+                .HasQueryFilter(x => x.IsApproved);
         }
     }
 }

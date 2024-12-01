@@ -22,7 +22,14 @@ export class NavComponent {
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: _ => this.router.navigateByUrl('/members'),
+      next: _ => {
+        if (this.accountService.roles()?.some((r: string) => r?.toLowerCase() === 'admin')) {
+          this.router.navigateByUrl('/admin')
+        }
+        else {
+          this.router.navigateByUrl('/members')
+        }
+      },
       error: error => {
         const errors: string[] = error;
         errors.forEach(item => {

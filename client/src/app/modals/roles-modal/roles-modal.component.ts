@@ -9,11 +9,13 @@ import { User } from '../../_models/user';
   templateUrl: './roles-modal.component.html',
   styleUrl: './roles-modal.component.css'
 })
+
 export class RolesModalComponent implements OnInit {
   ngOnInit(): void {
     this.currentRoles = this.user.roles.slice();
     this.selectedRoles = this.user.roles.slice();
   }
+
   user: User = {} as User;
   modalRef = inject(BsModalRef);
   title = '';

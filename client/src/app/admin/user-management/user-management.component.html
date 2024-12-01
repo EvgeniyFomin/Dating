@@ -2,20 +2,28 @@
     <table class="table">
         <thead>
             <tr>
-                <th style="width: 30%;">Username</th>
-                <th style="width: 40%;">Active roles</th>
-                <th style="width: 30%;"><i class="fa fa-edit" style="margin-left: 12%;"></i></th>
+                <th style="width: 25%;">Username</th>
+                <th style="width: 25%;">Known as</th>
+                <th style="width: 25%;">Active roles</th>
+                <th style="width: 25%;"><i class="fa fa-edit" style="margin-left: 12%;"></i></th>
             </tr>
         </thead>
         <tbody>
             @for (user of users; track user.id){
             <tr>
                 <td>{{user.userName}}</td>
+                <td>{{user.knownAs}}</td>
                 <td>{{user.roles}}</td>
                 <td>
-                    <button class="btn btn-info" (click)="openRolesModal(user)">
-                        <i class="fa fa-edit"> Edit roles</i>
-                    </button>
+                    <div class="btn-group">
+                        <button class="btn btn-info" (click)="openRolesModal(user)">
+                            <i class="fa fa-edit"> Edit roles</i>
+                        </button>
+                        <button class="btn btn-primary" (click)="removeUser(user.id)">
+                            <i class="fa fa-trash"> Remove</i>
+                        </button>
+                    </div>
+                    
                 </td>
             </tr>
             }

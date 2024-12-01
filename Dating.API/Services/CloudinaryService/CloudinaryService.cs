@@ -1,18 +1,16 @@
-﻿using AutoMapper;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Dating.API.Services.Interfaces;
-using Dating.Core.Dtos;
 using Dating.Core.Models;
 using Microsoft.Extensions.Options;
 
 namespace Dating.API.Services.CloudinaryService
 {
-    public class CloudinaryService : IPhotoService
+    public class CloudinaryService : ICloudinaryService
     {
         private readonly Cloudinary _cloudinary;
-        private readonly IMapper _mapper;
-        public CloudinaryService(IOptions<CloudinarySettings> config, IMapper mapper)
+        private readonly string _folder;
+
+        public CloudinaryService(IOptions<CloudinarySettings> config)
         {
             var account = new Account(
                 config.Value.CloudName,
@@ -21,10 +19,10 @@ namespace Dating.API.Services.CloudinaryService
 
             _cloudinary = new Cloudinary(account);
 
-            _mapper = mapper;
+            _folder = config.Value.Folder;
         }
 
-        public async Task<Photo?> AddPhotoAsync(IFormFile file)
+        public async Task<Photo?> UploadPhotoAsync(IFormFile file)
         {
             if (file.Length <= 0) throw new Exception("Photo file is empty");
 
@@ -33,35 +31,23 @@ namespace Dating.API.Services.CloudinaryService
             {
                 File = new FileDescription(file.FileName, stream),
                 Transformation = new Transformation().Height(500).Width(500).Crop("fill").Gravity("face"),
-                Folder = "dating"
+                Folder = _folder
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
             if (uploadResult.Error != null) throw new Exception($"Photo was not uploaded. Error: {uploadResult.Error.Message}");
 
-            return GetPhotoFromResult(uploadResult);
+            return new Photo
+            {
+                Url = uploadResult.SecureUrl.AbsoluteUri,
+                PublicId = uploadResult.PublicId
+            };
         }
 
         public async Task<DeletionResult> DeletePhotoAsync(string publicId)
         {
-            var deletionParams = new DeletionParams(publicId);
-
-            return await _cloudinary.DestroyAsync(deletionParams);
-        }
-
-        public PhotoDto MapToDto(Photo photo)
-        {
-            return _mapper.Map<PhotoDto>(photo);
-        }
-
-        private static Photo GetPhotoFromResult(ImageUploadResult result)
-        {
-            return new Photo
-            {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
-            };
+            return await _cloudinary.DestroyAsync(new DeletionParams(publicId));
         }
     }
 }

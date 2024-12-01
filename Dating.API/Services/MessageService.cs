@@ -15,10 +15,10 @@ namespace Dating.API.Services
 
         public async Task<MessageDto?> AddMessageAsync(int senderId, CreateMessageDto messageDto)
         {
-            var recipient = await _usersRepository.GetByIdAsync(messageDto.RecipientId);
+            var recipient = await _usersRepository.GetByIdAsync(messageDto.RecipientId, false);
             if (recipient == null || recipient.UserName == null) return null;
 
-            var sender = await _usersRepository.GetByIdAsync(senderId);
+            var sender = await _usersRepository.GetByIdAsync(senderId, false);
             if (sender == null || sender.UserName == null) return null;
 
             var message = new Message
@@ -32,7 +32,7 @@ namespace Dating.API.Services
                 Content = messageDto.Content
             };
 
-            await _messagesRepository.AddAsync(mapper.Map<Message>(message));
+            await _messagesRepository.AddAsync(message);
 
             return await unitOfWork.Complete()
                 ? mapper.Map<MessageDto>(message)

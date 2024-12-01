@@ -7,9 +7,7 @@ namespace Dating.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountsController(
-        IAccountService accountService,
-        ITokenService tokenService) : ControllerBase
+    public class AccountsController(IAccountService accountService, ITokenService tokenService) : ControllerBase
     {
         private readonly ITokenService _tokenService = tokenService;
 
@@ -24,7 +22,7 @@ namespace Dating.API.Controllers
             var (result, user) = await accountService.CreateAccountAsync(registerDto);
 
             return result.Succeeded
-                ? Ok(CreateUserDto(user))
+                ? Ok(await CreateUserDto(user))
                 : BadRequest(result.Errors);
         }
 
@@ -35,7 +33,7 @@ namespace Dating.API.Controllers
 
             if (user == null || user.UserName == null)
             {
-                return NotFound($"User {registerDto.UserName} not found in the system");
+                return Unauthorized($"User {registerDto.UserName} not found in the system");
             }
 
             var result = await accountService.CheckIfPasswordValid(user, registerDto.Password);
@@ -51,6 +49,7 @@ namespace Dating.API.Controllers
         {
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName!,
                 Token = await _tokenService.CreateToken(user),
                 KnownAs = user.KnownAs,

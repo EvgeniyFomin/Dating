@@ -26,7 +26,8 @@ builder.Services.AddSignalR();
 // API stuff
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IPhotoService, CloudinaryService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ILikesService, LikesService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<ILikesRepository, LikesRepository>();
 builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
 builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
+builder.Services.AddScoped<IPhotosRepository, PhotosRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();

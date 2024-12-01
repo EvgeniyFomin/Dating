@@ -1,4 +1,4 @@
-.is-invalid{
+.is-invalid,.alert-danger{
     border-style: solid;
     border-width: 2px;
     border-color: red;

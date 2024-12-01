@@ -6,12 +6,12 @@ namespace Dating.DAL.Repositories.Interfaces
 {
     public interface IUsersRepository
     {
-        Task<User?> GetByIdAsync(int id);
+        Task<User?> GetByIdAsync(int id, bool isUserCurrent);
         Task<User?> GetByNameAsync(string name);
+        Task<User?> GetByPhotoIdAsync(int photoId);
 
         // member
         Task<PagedList<MemberDto>> GetMemberDtosAsync(UserFilteringParameters parameters);
-        Task<MemberDto?> GetMemberDtoById(int id);
-        Task<MemberDto?> GetMemberDtoByName(string name);
+        Task<MemberDto?> GetMemberDtoByIdAsync(int id, bool isCurrentUser);
     }
 }

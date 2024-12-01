@@ -17,6 +17,11 @@ export function setPaginationHeaders(pagingParams: PagingParams): HttpParams {
 export function setPaginatedResponse<T>(
     response: HttpResponse<T>,
     paginatedResult: ReturnType<typeof signal<PaginatedResult<T> | null>>) {
+    if ((response.body as []).length <= 0) {
+        paginatedResult.set(null);
+        return;
+    }
+
     paginatedResult.set({
         items: response.body as T,
         pagination: JSON.parse(response.headers.get('Pagination')!)

@@ -917,7 +917,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Photos To Moderate",
+					"name": "Get Photos For Approval",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -927,7 +927,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{ana_token}}",
+									"value": "{{admin_token}}",
 									"type": "string"
 								}
 							]
@@ -939,13 +939,79 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url_https}}/Admins/photos-to-moderate",
+							"raw": "{{url_https}}/Admins/photos-for-approval",
 							"host": [
 								"{{url_https}}"
 							],
 							"path": [
 								"Admins",
-								"photos-to-moderate"
+								"photos-for-approval"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url_https}}/Admins/approve-photo/24",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Admins",
+								"approve-photo",
+								"24"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url_https}}/Admins/reject-photo/23",
+							"host": [
+								"{{url_https}}"
+							],
+							"path": [
+								"Admins",
+								"reject-photo",
+								"23"
 							]
 						}
 					},

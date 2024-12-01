@@ -19,7 +19,6 @@ export class MembersService {
   baseUrl = environment.apiUrl + "users/";
   paginatedResult = signal<PaginatedResult<Member[]> | null>(null);
   memberCache = new Map();
-  user = this.accountService.currentUser();
   userParams = signal<UserParams>(new UserParams(this.accountService.currentUser()));
 
   resetUserParams() {
@@ -41,11 +40,7 @@ export class MembersService {
     });
   }
 
-  getMemberByName(userName: string) {
-    return this.httpClient.get<Member>(this.baseUrl + userName);
-  }
-
-  getMemberById(id: string) {
+  getUserById(id: string) {
     const member: Member = [...this.memberCache.values()]
       .reduce((arr, elem) => arr.concat(elem.body), [])
       .find((m: Member) => m.id.toString() == id);

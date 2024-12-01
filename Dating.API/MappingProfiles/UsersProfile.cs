@@ -19,7 +19,11 @@ namespace Dating.API.MappingProfiles
             CreateMap<Message, MessageDto>();
             CreateMap<CreateMessageDto, MessageDto>();
             CreateMap<Photo, PhotoDto>();
+            CreateMap<Photo, PhotoForApprovalDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(u => u.User.KnownAs));
+
             CreateMap<MemberUpdateDto, User>();
+
             CreateMap<RegisterUserDto, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(dest => MapToDateOnlyFromString(dest.DateOfBirth)));

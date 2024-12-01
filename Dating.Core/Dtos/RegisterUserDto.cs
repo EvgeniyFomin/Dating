@@ -1,5 +1,4 @@
-﻿using Dating.Core.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Dating.Core.Dtos
 {

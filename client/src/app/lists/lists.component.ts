@@ -1,6 +1,6 @@
 import { FormsModule } from '@angular/forms';
 import { LikesService } from './../_services/likes.service';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { MemberCardComponent } from "../members/member-card/member-card.component";
 import { LikeParams } from '../_models/likeParams';
