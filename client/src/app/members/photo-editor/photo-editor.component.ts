@@ -63,7 +63,6 @@ export class PhotoEditorComponent implements OnInit {
     this.uploader.onErrorItem = (item, response, status, headers) => {
       const resp = JSON.parse(response);
       this.toastr.error(resp?.message);
-      console.log(resp?.message);
     }
   }
 
