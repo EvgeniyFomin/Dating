@@ -32,7 +32,7 @@ namespace Dating.DAL.Context
                 .HasOne(t => t.TargetUser)
                 .WithMany(l => l.LikedByUsers)
                 .HasForeignKey(k => k.TargetUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Message>()
                 .HasOne(r => r.Recipient)
