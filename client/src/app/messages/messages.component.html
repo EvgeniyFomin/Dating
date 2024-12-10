@@ -48,8 +48,8 @@
                     <td>
                         <div>
                             <img [src]="isOutbox
-                                ?(message.recipient.photoUrl || './user.png')
-                                :(message.sender.photoUrl || './user.png')"
+                                ?(message.recipient.photoUrl || 'assets/user.png')
+                                :(message.sender.photoUrl || 'assets/user.png')"
                                 alt='image of user'
                                 class="rounded-circle me-2"
                             >

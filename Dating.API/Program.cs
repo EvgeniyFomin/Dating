@@ -8,8 +8,6 @@ using Dating.Core.Interfaces;
 using Dating.Core.Models;
 using Dating.Core.Models.Identity;
 using Dating.DAL.Context;
-using Dating.DAL.Repositories;
-using Dating.DAL.Repositories.Interfaces;
 using Dating.DAL.Seed;
 using Dating.SignalR;
 using Microsoft.AspNetCore.Identity;
@@ -39,12 +37,6 @@ builder.Services.AddSingleton<IPresenceTracker, PresenceTracker>();
 
 // DAL stuff
 builder.Services.AddDataContextServices(builder.Configuration);
-builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-builder.Services.AddScoped<ILikesRepository, LikesRepository>();
-builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
-builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
-builder.Services.AddScoped<IPhotosRepository, PhotosRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -69,10 +61,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
+app.MapFallbackToController("Index", "Fallback");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

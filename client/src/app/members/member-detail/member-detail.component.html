@@ -8,7 +8,7 @@
                     }
                 </h4>
             </div>
-            <img class="card-img img-thumbnail" src="{{member.mainPhotoUrl || 'user.png'}}" alt="{{member.knownAs}}">
+            <img class="card-img img-thumbnail" src="{{member.mainPhotoUrl || 'assets/user.png'}}" alt="{{member.knownAs}}">
             <div class="card-body">
                 @if(presenceService.onlineUserIds().includes(member.id)){
                     <div class="mb-2">

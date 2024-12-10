@@ -49,7 +49,7 @@ export class MessagesService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(error => console.log(error));
+    this.hubConnection.start().catch(error => console.error(error));
 
     this.hubConnection.on('ReceiveMessageThread', messages => {
       this.messageThread.set(messages);
@@ -75,7 +75,7 @@ export class MessagesService {
 
   stopHubConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
-      this.hubConnection.stop().catch(error => console.log(error));
+      this.hubConnection.stop().catch(error => console.error(error));
     }
   }
 }

@@ -12,7 +12,7 @@ namespace Dating.DAL.Seed
         {
             if (await userManager.Users.AnyAsync()) return;
 
-            var path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\..\Dating.DAL\Seed\UserSeedData.json"));
+            var path = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Data\UserSeedData.json"));
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 

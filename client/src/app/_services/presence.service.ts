@@ -25,7 +25,7 @@ export class PresenceService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.start().catch(error => console.log(error));
+    this.hubConnection.start().catch(error => console.error(error));
 
     this.hubConnection.on('UserIsOnline', userId => {
       this.onlineUserIds.update(users => [...users, userId])
@@ -49,7 +49,7 @@ export class PresenceService {
 
   stopHubConnection() {
     if (this.hubConnection?.state === HubConnectionState.Connected) {
-      this.hubConnection.stop().catch(error => console.log(error))
+      this.hubConnection.stop().catch(error => console.error(error))
     }
   }
 }
