@@ -15,9 +15,6 @@
             <li class="nav-item">
                 <a routerLink="admin" *appHasRole="['Admin', 'Moderator']" routerLinkActive="active" class="nav-link">Admin</a>
             </li>
-            <li class="nav-item">
-                <a routerLink="/errors" class="nav-link">Errors</a>
-            </li>
         </ul>
         <div dropdown class="dropdown">
             <img class="me-2" src="{{accountService.currentUser()?.photoUrl || 'assets/user.png'}}" alt="user main mage">

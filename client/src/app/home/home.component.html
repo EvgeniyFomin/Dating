@@ -7,8 +7,9 @@
             Come on in to view your matches. All you need to do is just sign up
         </p>
         <div class="text-center">
-            <button (click)="registerToggle()" class="btn btn-primary btn me-2">Register</button>
-            <button class="btn btn-info btn me-2">Learn more</button>
+            <button *ngIf="!accountService.currentUser()" (click)="registerToggle()"
+                class="btn btn-primary btn me-2">Register</button>
+            <button class="btn btn-info btn me-2" (click)="showLearnMore()">Learn more</button>
         </div>
     </div>
     }@else {
