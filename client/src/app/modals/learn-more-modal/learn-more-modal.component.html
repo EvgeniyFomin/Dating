@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">
+        Learn more
+    </h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p>
+        This is the pet project based on the udemy course
+    </p>
+    <p>
+        The main goal of this - is the practical skillup in both Angular 18 and .net 8.0
+    </p>
+    <ul>
+        <li> Frontend - Angular 18 (bootstrap, font awesome, signalR) </li>
+        <li> Backend - C# .net core 8.0 (entity framework, identity, mvc, n-tier architecture, signalR) </li>
+        <li> Integration with 3rd party services (cloudinary) </li>
+        <li> Hosting - Azure (web app, sql database, CI) </li>
+        <li> Postman - included collection with API calls for all of the endpoints </li>
+        <li> <a href="https://github.com/EvgeniyFomin/Dating/tree/release"> Project source code on GitHub </a></li>
+    </ul>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" (click)="modalRef.hide()">
+        Close
+    </button>
+</div>
