@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-learn-more-modal',
@@ -8,8 +8,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
   templateUrl: './learn-more-modal.component.html',
   styleUrl: './learn-more-modal.component.css'
 })
+
 export class LearnMoreModalComponent {
-
   modalRef = inject(BsModalRef);
-
 }
